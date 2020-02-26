@@ -1,0 +1,138 @@
+@import './_variables.scss';
+@import './styles/shared/_Header.scss';
+@import './styles/_Home.scss';
+@import './styles/features/UsersProfile.scss';
+@import './styles/features/PreviewModal.scss';
+@import './styles/features/EditInfoModal.scss';
+@import './styles/features/FollowersModal.scss';
+@import './styles/features/FollowingModal.scss';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: #2a2a2a;
+  font-family: 'Merriweather', serif;
+  font-size: $font-size-body;
+  background: url('./imgs/background.jpg') 100% 100%;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  border: none;
+  outline: none;
+}
+
+textarea {
+  font-family: 'Merriweather', serif;
+  font-size: $font-size-body;
+}
+
+input {
+  font-family: 'Merriweather', serif;
+  font-size: $font-size-body;
+}
+
+.posts-container { 
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 15px;
+  padding: 20px 10px;
+  border-bottom: 7px solid #98D1FA;
+}
+
+.posts-container-img {
+  flex: 19%;
+  max-width: 19%;
+  max-height: 19%;
+  margin: 2px;
+  cursor: pointer;
+  transition: transform .2s;
+}
+
+@media screen and (max-width: $media-screen-fifth) {
+  .posts-container-img {
+    flex: 100%;
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+
+@media screen and (min-width: $media-screen-fifth) and (max-width: $media-screen-fourth) {
+  .posts-container-img {
+    flex: 48%;
+    max-width: 48%;
+  }
+}
+
+@media screen and (min-width: $media-screen-fourth) and (max-width: $media-screen-third) {
+  .posts-container-img {
+    flex: 32%;
+    max-width: 32%;
+    max-height: 32%;
+  }
+}
+
+@media screen and (min-width: $media-screen-third) and (max-width: $media-screen-second) {
+  .posts-container-img {
+    flex: 24%;
+    max-width: 24%;
+    max-height: 24%;
+  }
+}
+
+@media screen and (min-width: $media-screen-second) and (max-width: $media-screen-first) {
+  .posts-container-img {
+    flex: 19%;
+    max-width: 19%;
+    max-height: 19%;
+  }
+}
+
+.posts-container-img:hover {
+  z-index: 1;
+  transform: scale(1.1);
+
+  .posts-container-img-buttons {
+    z-index: 1;
+  }
+}
+
+.posts-container-img img {
+  width: 100%;
+  height: 100%;
+}
+
+.heart-icon-unliked {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  background: url('./icons/heart-regular.svg') no-repeat;
+}
+
+.heart-icon-liked {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  background: url('./icons/heart-solid.svg') no-repeat;
+}
+
+.hide-button {
+  display: none;
+}

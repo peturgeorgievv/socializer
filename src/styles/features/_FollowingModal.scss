@@ -1,0 +1,34 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  width:100%;
+  height: 100%;
+  overflow-y:scroll;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.modal-main-followers {
+  position:fixed;
+  top:50%;
+  left:50%;
+  overflow-y: auto;
+  width: 40%;
+  max-height: calc(100vh - 210px);
+  background: white;
+  transform: translate(-50%,-50%);
+}
+
+.modal-avatar {
+  width: 80px;
+  height: 80px;
+}
+
+.display-block {
+  display: block;
+}
+
+.display-none {
+  display: none;
+}

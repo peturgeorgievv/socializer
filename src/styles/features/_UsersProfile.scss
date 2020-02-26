@@ -1,0 +1,55 @@
+.user-data-container {
+  display: flex;
+  align-items: center;
+  width: 60%;
+  margin: 10px auto;
+  padding: 5px;
+  line-height: 1.6;
+  border: 7px solid #98D1FA;
+  border-radius: 25px;
+}
+
+.avatar {
+  display: flex;
+  margin-right: 15px;
+  align-items: center;
+}
+
+.avatar img {
+  width: 120px;
+  height: 120px;
+  margin: auto;
+  cursor: pointer;
+  border-radius: 25px;
+}
+
+.user-info-container {
+  font-weight: $font-bold;
+}
+
+.user-info-follows span {
+  margin-right: 15px;
+}
+
+.user-info-buttons button {
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: $font-size-buttons;
+  font-weight: $font-bold;
+  text-shadow: 0.02em 0 white, 0 0.02em white, -0.02em 0 white, 0 -0.02em white;
+  cursor: pointer;
+  background: $color-navbar-primary;
+  border-radius: 25px;
+}
+
+.user-info-buttons button:hover {
+  background: $color-navbar-hover;
+}
+
+.followers-link {
+  cursor: pointer;
+}
+
+.following-link {
+  cursor: pointer;
+}
