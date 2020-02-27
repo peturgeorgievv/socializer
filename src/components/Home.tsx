@@ -46,19 +46,14 @@ class Home extends Component<any,any> {
     const posts: any = [];
     if (this.props.currentUser) {
       querySnapshot.forEach((img: any) => {
-        const { 
-          imgUrl, 
-          status, 
-          uploadedBy, 
-          title, 
-          description, 
-          comments, 
-          likes, 
-          postId, 
-          firstName, 
-          lastName,
-          dateCreated,
-          profilePhotoUrl
+        const {
+          imgUrl,
+          status,
+          uploadedBy,
+          title,
+          description,
+          postId,
+          dateCreated
         } = img.data();
         if (
           status === 'public' ||
@@ -74,15 +69,10 @@ class Home extends Component<any,any> {
             uploadedBy,
             title,
             description,
-            comments,
-            likes,
             postId,
-            firstName,
-            lastName,
-            dateCreated,
-            profilePhotoUrl
+            dateCreated
           })
-       }
+        }
       })
     }
     if (this._isMounted) {
@@ -95,11 +85,11 @@ class Home extends Component<any,any> {
   render = () => {
     return (
       <div className="posts-container">
-        {/* <PreviewModal 
+        <PreviewModal 
           show={this.state.show}
           handleClose={this.hideModal}
           imgData={this.state.imgData}
-        /> */}
+        />
         { this.state.posts.length > 0 && this.state.posts.map((data: any, index: any) => {
           return (
             <div className="posts-container-img" key={index} onClick={() => this.showModal(data)}>

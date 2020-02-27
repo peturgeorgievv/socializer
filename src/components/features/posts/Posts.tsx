@@ -46,20 +46,24 @@ class Posts extends Component<any, any> {
   onCollectionUpdate = (querySnapshot: any) => {
     const posts: any = [];
     querySnapshot.forEach((img: any) => {
-      const { imgUrl, profilePhotoUrl, dateCreated, status, uploadedBy, title, description, comments, likes, postId, firstName, lastName } = img.data();
+      const {
+        imgUrl,
+        status,
+        uploadedBy,
+        title,
+        description,
+        postId,
+        dateCreated
+      } = img.data();
+      
       posts.push({
         imgUrl,
         status,
         uploadedBy,
         title,
         description,
-        comments,
-        likes,
         postId,
-        firstName,
-        lastName,
-        dateCreated,
-        profilePhotoUrl
+        dateCreated
       })
     })
     if (this._isMounted) {
@@ -72,11 +76,11 @@ class Posts extends Component<any, any> {
   render = () => {
     return (
       <React.Fragment>
-          {/* <PreviewModal 
+          <PreviewModal 
             show={this.state.show}
             handleClose={this.hideModal}
             imgData={this.state.imgData}
-          /> */}
+          />
           <div className="posts-container">
             { this.state.posts && 
               this.state.posts.length > 0 &&

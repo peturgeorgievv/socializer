@@ -2,7 +2,7 @@ import { auth } from '../../config/authService';
 import firebase from '../../config/firebaseService';
 import { GET_USER_POSTS } from './types';
 
-export const getUserPosts = () => async (dispatch: (arg0: { type: any; imgData: any[] | null; }) => void) => {
+export const getUserPosts = () => async (dispatch: any) => {
   try {
     await auth.onAuthStateChanged((currentUser: any) => {
       if (currentUser) {

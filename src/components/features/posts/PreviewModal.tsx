@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'
 import firebase from '../../../config/firebaseService';
-
-type CommentData = any;
-
-type ImgData = any;
+import { CommentData } from '../../../models/posts/CommentData';
+import { ImgData } from '../../../models/posts/ImgData';
+import { UserData } from '../../../models/users/UserData';
 
 type PreviewModalProps = {
   show: boolean;
@@ -17,34 +16,67 @@ type PreviewModalProps = {
 type PreviewModalState = {
   commentText: string;
   imgData: ImgData;
-  commentData: CommentData;
+  postUserData: UserData | null;
+  commentData: CommentData[];
+  commentedUserData: any[]
 }
 
-class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
-  state: any = {
-    commentText: '',
-    imgData: this.props.imgData,
-    commentData: null,
+class PreviewModal extends Component<any, PreviewModalState> {
+  _isMounted: boolean
+
+  constructor(props: any) {
+    super(props);
+    this._isMounted = true;
+    
+    this.state = {
+      commentText: '',
+      imgData: this.props.imgData,
+      postUserData: null,
+      commentData: [],
+      commentedUserData: []
+    }
   }
 
-  componentDidUpdate = async (prevProps: any, prevState: any) => {
+  
+  componentDidUpdate = async (prevProps: PreviewModalProps, prevState: PreviewModalState) => {
     if (prevProps === this.props) return;
-    console.log(`entered`);
+    if (this.props.imgData.uploadedBy) {
+      firebase.firestore().collection('users').doc(this.props.imgData.uploadedBy).get().then((userSnapshot: any) => {
+        this.setState({ postUserData: userSnapshot.data() });
+      })
+    }
 
-    const promises = this.props.imgData.comments.map((commentData: { userRef: { get: () => any; }; }, index: any) => {
-      return commentData.userRef.get();
-    });
+    if (this.props.imgData.postId) {
+      firebase.firestore().collection('comments')
+        .where('postId', '==', this.props.imgData.postId)
+        .onSnapshot((querySnapshot: any) => {
+          if (this._isMounted) {
+            this.setState({ commentData: [] });
+          }
+          let counter = 0;
+          querySnapshot.forEach((comment: any) => {
+            if (this._isMounted) {
+              this.setState((prevState: PreviewModalState) => ({
+                  commentData: [...prevState.commentData, comment.data()],
+              }));
+            }
 
-    console.log(promises);
-    const allDocuments = await Promise.all(promises);
-    const users = allDocuments.map((document: any) => document.data());
+            firebase.firestore().collection('users').doc(this.state.commentData[counter].userId)
+              .onSnapshot((querySnapshot: any) => {
+                if (this._isMounted) {
+                  this.setState((prevState: PreviewModalState) => ({
+                    commentedUserData: [...prevState.commentedUserData, querySnapshot.data()],
+                  }))
+                }
+              })
+            counter++;
+          })
+        })
+    }
+  }
 
-    const commentData = this.props.imgData.comments.map((com: any, index: any) => {
-      const newCom = {...com, user: users[index]};
-      return newCom;
-    });
-    console.log(commentData);
-    this.setState({ commentData })
+  componentWillUnmount = () => {
+    this._isMounted = false;
   }
 
   // TO FIX CASE WHERE LIKE AND DISLIKE ARE JUST PUSHED TO LOCAL STATE
@@ -93,43 +125,33 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
     }
   }
 
-  handleComment = (event: { preventDefault: () => void; }) => {
+  handleComment = (event: any) => {
     event.preventDefault();
-    // send to firebase comments -> commentLikes[] And to make it live
     this.refComments = firebase
       .firestore()
-      .collection('posts')
-      .doc(this.props.imgData.postId)
-      .update({
-        comments: firebase.firestore.FieldValue.arrayUnion({
-          description: this.state.commentText,
-          commentedBy: this.props.currentUser.documentId,
-          userRef: firebase.firestore().doc(`users/${this.props.currentUser.documentId}`),
-          firstName: this.props.currentUser.firstName,
-          lastName: this.props.currentUser.lastName,
-          createdOn: new Date().toLocaleString(),
-          profilePhotoUrl: this.props.currentUser.profilePhotoUrl
-        }),
-      }).then(() => {
-        this.props.imgData.comments.push({
-          description: this.state.commentText,
-          commentedBy: this.props.currentUser.documentId,
-          userRef: firebase.firestore().doc(`users/${this.props.currentUser.documentId}`),
-          firstName: this.props.currentUser.firstName,
-          lastName: this.props.currentUser.lastName,
-          createdOn: new Date().toLocaleString(),
-          profilePhotoUrl: this.props.currentUser.profilePhotoUrl
-        })
-        this.setState({
-          commentText: '',
-          imgData: this.props.imgData
-        });
+      .collection('comments')
+      .add({
+        postId: this.props.imgData.postId,
+        description: this.state.commentText,
+        createdOn: new Date().toLocaleString(),
+        userId: this.props.currentUser.documentId
+      }).then((commentData: any) => {
+        firebase.firestore()
+          .collection('comments')
+          .doc(commentData.id)
+          .set({ commentId: commentData.id }, { merge: true });
+          if (this._isMounted) {
+            this.setState({ commentText: '' });
+          }
       });
   }
 
-  handleDeleteComment = (event: { preventDefault: () => void; }) => {
-    event.preventDefault();
-
+  handleDeleteComment = (commentId: string) => {
+    firebase
+      .firestore()
+      .collection('comments')
+      .doc(commentId)
+      .delete();
   }
 
   handleChange = (event: { target: { value: any; }; }) => {
@@ -158,20 +180,21 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
               <span className={showHideUnlikeButton} id="dislike-button" onClick={this.handleLikeDislike}></span>
               <span>{this.props.imgData.likes && this.props.imgData.likes.length}</span>
               <span className="comments-icon" id="comments-icon"></span>
-              <span>{this.props.imgData.comments && this.props.imgData.comments.length}</span>
+              <span>{this.state.commentData && this.state.commentData.length}</span>
             </div>
           </div>
           <div className="comments-section-container">
+            {this.state.postUserData &&
             <div className="comment-section-image-container">
               <div className="comment-section-image">
-                <Link to={`/users/${this.props.imgData.uploadedBy}`}>
-                  <img src={this.props.imgData.profilePhotoUrl} alt="avatar" />
+                <Link to={`/users/${this.state.postUserData.documentId}`}>
+                  <img src={this.state.postUserData.profilePhotoUrl} alt="avatar" />
                 </Link>
               </div>
               <div>
-                <Link to={`/users/${this.props.imgData.uploadedBy}`}>
+                <Link to={`/users/${this.state.postUserData.documentId}`}>
                   <span>
-                    <strong>{`${this.props.imgData.firstName} ${this.props.imgData.lastName}`}</strong>
+                    <strong>{`${this.state.postUserData.firstName} ${this.state.postUserData.lastName}`}</strong>
                   </span>
                 </Link>
                 <span className="title-date">{this.props.imgData.dateCreated}</span>
@@ -188,31 +211,46 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
                 </form>
               </div>
             </div>
+            }
             <div className="all-comments">
-              { this.props.imgData.comments &&
-                this.props.imgData.comments.length > 0 && 
-                this.state.commentData && 
-                this.state.commentData.map((commentData: { commentedBy: any; user: { profilePhotoUrl: string | undefined; }; firstName: any; lastName: any; createdOn: React.ReactNode; description: any; }, index: string | number | undefined) => {
+              { this.state.commentData.length > 0 &&
+                this.state.commentData
+                  .sort((a: CommentData, b: CommentData) => (new Date(b.createdOn) as any) - (new Date(a.createdOn) as any))
+                  .map((commentData: CommentData, index: number) => {
+                const userData = this.state.commentedUserData.find((userData) => userData.documentId === commentData.userId);
                 return (
                   <div key={index} className="single-comment">
-                    <div className="single-comment-img-container">
-                      <Link to={`/users/${commentData.commentedBy}`}>
-                        <img src={commentData.user.profilePhotoUrl} alt="avatar" />
-                      </Link>
-                    </div>
-                    <div>
-                      <span className="delete-comment-icon"></span>
-                      <span className="edit-comment-icon"></span>
-                      <Link to={`/users/${commentData.commentedBy}`}>
-                        <span>
-                          <strong>
-                            { `${commentData.firstName} ${commentData.lastName}` }
-                          </strong>
-                        </span>
-                      </Link>
-                      <span className="comment-date">{commentData.createdOn}</span>
-                      <div className="comment-description">{`${commentData.description}`}</div>
-                    </div>
+                    { userData &&
+                    <React.Fragment>
+                      <div className="single-comment-img-container">
+                        <Link to={`/users/${userData.documentId}`}>
+                          <img src={userData.profilePhotoUrl} alt="avatar" />
+                        </Link>
+                      </div>
+                      <div>
+                        {(
+                          this.props.currentUser.documentId === commentData.userId ||
+                          this.props.currentUser.documentId === this.state.postUserData?.documentId
+                        ) &&
+                        <React.Fragment>
+                          <span onClick={() => this.handleDeleteComment(commentData.commentId)} className="delete-comment-icon"></span>
+                          <span className="edit-comment-icon"></span>
+                        </React.Fragment>
+                        }
+                        <Link to={`/users/${userData.documentId}`}>
+                          <span>
+                            <strong>
+                              { this.state.commentedUserData.length > 0 &&
+                                userData &&
+                              `${userData.firstName} ${userData.lastName}` }
+                            </strong>
+                          </span>
+                        </Link>
+                        <span className="comment-date">{commentData.createdOn}</span>
+                        <div className="comment-description">{`${commentData.description}`}</div>
+                      </div>
+                    </React.Fragment>
+                    }
                   </div>
                 )
               })}

@@ -161,28 +161,24 @@ class UsersProfile extends Component<any, any> {
     this.updateUserBatch.commit();
   }
 
-  onCollectionUpdate = (querySnapshot: { data: () => any; }) => {
+  onCollectionUpdate = (querySnapshot: any) => {
     let userData = querySnapshot.data();
-    let posts: { imgUrl: any; status: any; uploadedBy: any; userRefData: {}; title: any; description: any; comments: any; likes: any; postId: any; firstName: any; lastName: any; profilePhotoUrl: any; dateCreated: any; }[] = []; 
+    let posts: any = []; 
     this.refPosts && this.refPosts
       .where('uploadedBy', '==', userData.documentId)
       .onSnapshot((photosQuerySnapshot: any[]) => {
         posts = [];
-        photosQuerySnapshot.forEach((post: { data: () => { imgUrl: any; status: any; uploadedBy: any; userRef: any; title: any; description: any; comments: any; likes: any; postId: any; firstName: any; lastName: any; dateCreated: any; }; }) => {
+        photosQuerySnapshot.forEach((post: any) => {
           const {
-            imgUrl, 
+            imgUrl,
             status,
             uploadedBy,
-            userRef,
-            title, 
-            description, 
-            comments, 
-            likes, 
-            postId, 
-            firstName, 
-            lastName,
+            title,
+            description,
+            postId,
             dateCreated
           } = post.data();
+
           if (
             status === 'public' ||
             this.props.currentUser.documentId === userData.documentId ||
@@ -191,33 +187,16 @@ class UsersProfile extends Component<any, any> {
             this.props.currentUser.following &&
             this.props.currentUser.following.find((follower: { userDocumentId: any; }) => follower.userDocumentId === uploadedBy))
           ) {
-            let userRefData: any = {}; 
-            this.userRef = userRef.onSnapshot((user: { data: () => {}; }) => {
-              userRefData = user.data();
-              const profilePhotoUrl = userRefData.profilePhotoUrl
               posts.push({
                 imgUrl,
                 status,
                 uploadedBy,
-                userRefData,
                 title,
                 description,
-                comments,
-                likes,
                 postId,
-                firstName,
-                lastName,
-                profilePhotoUrl,
                 dateCreated
               })
-              if (this._isMounted) {
-                this.setState({
-                  userData,
-                  posts
-                })
-              }
-            })
-          };
+            };
           })
       if (this._isMounted) {
         this.setState({
@@ -225,7 +204,7 @@ class UsersProfile extends Component<any, any> {
           posts
         })
       }
-      })
+    })
   }
 
   componentWillUnmount = () => {

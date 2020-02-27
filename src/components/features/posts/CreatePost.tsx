@@ -55,14 +55,8 @@ class CreatePost extends Component<any, any> {
                 status: this.state.status,
                 dateCreated: new Date().toLocaleString(),
                 uploadedBy: this.props.currentUser.documentId,
-                userRef: firebase.firestore().doc(`users/${this.props.currentUser.documentId}`),
-                profilePhotoUrl: this.props.currentUser.profilePhotoUrl,
-                firstName: this.props.currentUser.firstName,
-                lastName: this.props.currentUser.lastName,
                 title: this.state.title,
                 description: this.state.description,
-                comments: [],
-                likes: [],
               }).then((postData: any) => {
                 firebase.firestore().collection('posts').doc(postData.id).set({ postId: postData.id }, { merge: true });
               });
