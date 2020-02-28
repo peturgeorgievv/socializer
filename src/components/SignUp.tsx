@@ -18,16 +18,14 @@ class SignUp extends Component<any, any> {
   }
   
 
-  handleChange = (event: any) => {
+  handleChange = (event: any): void => {
     this.setState({
       [event.target.id]: event.target.value,
     })
   }
 
-  handleSubmit = (event: any) => {
+  handleSubmit = (event: any): void => {
     event.preventDefault();
-    console.log(this.props)
-    console.log(this.props.register);
     this.props.register(this.state.email, this.state.password)
     .then((user: any) => {
         this.ref.add({
@@ -57,55 +55,56 @@ class SignUp extends Component<any, any> {
   
   render = () => {
     return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
-          <h4>Sign Up</h4>
-          <div>
-            <label htmlFor="email">Email</label>
-            <input type="email" id="email" onChange={this.handleChange}/>
-          </div>
-          <div>
-            <label htmlFor="password">Password</label>
-            <input type="password" id="password" onChange={this.handleChange}/>
-          </div>
-          <div>
-            <label htmlFor="firstName">First Name</label>
-            <input type="text" id="firstName" onChange={this.handleChange}/>
-          </div>
-          <div>
-            <label htmlFor="lastName">Last Name</label>
-            <input type="text" id="lastName" onChange={this.handleChange}/>
-          </div>
-          <div>
-            <input type="submit" value="Sign Up"/>
-          </div>
-        </form>
-{/* 
-        <div className="sign-up-htm">
-                <div className="group">
-                  <label htmlFor="user" className="label">Username</label>
-                  <input id="user" type="text" className="input" />
-                </div>
-                <div className="group">
-                  <label htmlFor="pass" className="label">Password</label>
-                  <input id="pass" type="password" className="input" data-type="password" />
-                </div>
-                <div className="group">
-                  <label htmlFor="pass" className="label">Repeat Password</label>
-                  <input id="pass" type="password" className="input" data-type="password" />
-                </div>
-                <div className="group">
-                  <label htmlFor="pass" className="label">Email Address</label>
-                  <input id="pass" type="text" className="input" />
-                </div>
-                <div className="group">
-                  <input type="submit" className="button" value="Sign Up" />
-                </div>
-                <div className="hr"></div>
-                <div className="foot-lnk">
-                  <label htmlFor="tab-1">Already Member?</label>
-                </div>
-              </div> */}
+      <div className="sign-up-wrap">
+        <div className="sign-up-html">
+          <label htmlFor="sign-up" className="tab">
+            Sign Up
+          </label>
+          <form className="sign-up-form" onSubmit={this.handleSubmit}>
+            <div>
+              <div className="group">
+                <label htmlFor="email" className="label">Email</label>
+                <input
+                  id="email"
+                  type="email"
+                  className="input"
+                  onChange={this.handleChange}
+                />
+              </div>
+              <div className="group">
+                <label htmlFor="firstName" className="label">First Name</label>
+                <input
+                  id="firstName"
+                  type="firstName"
+                  className="input"
+                  onChange={this.handleChange}
+                />
+              </div>
+              <div className="group">
+                <label htmlFor="lastName" className="label">Last Name</label>
+                <input
+                  id="lastName"
+                  type="text"
+                  className="input"
+                  onChange={this.handleChange}
+                />
+              </div>
+              <div className="group">
+                <label htmlFor="pass" className="label">Password</label>
+                <input 
+                  id="password"
+                  type="password"
+                  className="input" 
+                  data-type="password" 
+                  onChange={this.handleChange}
+                />
+              </div>
+              <div className="group">
+                <input type="submit" className="button" value="Sign Up" />
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     );
   }

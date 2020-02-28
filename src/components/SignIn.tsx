@@ -12,13 +12,13 @@ class SignIn extends Component<any, any> {
     }
   }
 
-  handleChange = (event: any) => {
+  handleChange = (event: any): void => {
     this.setState({
       [event.target.id]: event.target.value,
     })
   }
 
-  handleSubmit = (event: any) => {
+  handleSubmit = (event: any): void => {
     event.preventDefault();
     this.props.login(this.state.email, this.state.password)
       .then(() => {
@@ -33,12 +33,12 @@ class SignIn extends Component<any, any> {
   render = () => {
     return (
       <React.Fragment>
-        <form className="login-wrap" onSubmit={this.handleSubmit}>
+        <div className="login-wrap" onSubmit={this.handleSubmit}>
           <div className="login-html">
-            <label htmlFor="form" className="tab">
+            <label htmlFor="sign-in" className="tab">
               Sign In
             </label>
-            <div className="login-form">
+            <form className="login-form">
               <div className="sign-in-htm">
                 <div className="group">
                   <label htmlFor="email" className="label">Email</label>
@@ -69,9 +69,9 @@ class SignIn extends Component<any, any> {
                   <input type="submit" className="button" value="Sign In" />
                 </div>
               </div>
-            </div>
+            </form>
           </div>
-        </form>
+        </div>
       </React.Fragment>
     );
   }

@@ -1,0 +1,78 @@
+.sign-up-wrap {
+	position:relative;
+	width:100%;
+	max-width:470px;
+	min-height:620px;
+	margin:auto;
+}
+
+.sign-up-html {
+	position:absolute;
+	width:100%;
+	height:100%;
+	padding:70px 50px;
+	background: $color-navbar-primary;
+	border-radius: 12px;
+}
+
+.sign-up-html .tab {
+  border-bottom: 1px solid $color-search-background;
+}
+
+.sign-up-html .tab,
+.sign-up-form .group .label,
+.sign-up-form .group .button{
+	text-transform:uppercase;
+}
+
+.sign-up-html .tab{
+	display:inline-block;
+	margin:0 15px 10px 0;
+	padding-bottom:5px;
+	font-size: $font-size-heading;
+	font-weight: $font-bold;
+}
+
+.sign-up-form{
+	position:relative;
+	min-height:320px;
+}
+
+.sign-up-form .group{
+	margin-bottom:15px;
+}
+
+.sign-up-form .group .button{
+	display:block;
+	width:100%;
+	color: $color-navbar-fonts;
+}
+
+.sign-up-form .group .label,
+.sign-up-form .group .input {
+	width: 100%;
+	outline: none;
+}
+
+.sign-up-form .group .input,
+.sign-up-form .group .button{
+	padding: 15px 20px;
+	outline: none;
+	background: $color-background-primary;
+	border:none;
+	border-radius:25px;
+}
+
+.sign-up-form .group .button:hover {
+  background: $color-sign-buttons-hover;
+  cursor: pointer;
+}
+
+.sign-up-form .group .label{
+	color: $color-search-background;
+	font-size:12px;
+}
+
+.sign-up-form .group .button{
+	background: $color-search-background;
+}
