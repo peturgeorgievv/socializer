@@ -30,7 +30,7 @@ class SignIn extends Component<any, any> {
         console.log(error)
       })
   }
-  
+
   render = () => {
     return (
       <div>
@@ -38,16 +38,45 @@ class SignIn extends Component<any, any> {
           <h4>Sign In</h4>
           <div>
             <label htmlFor="email">Email</label>
-            <input type="email" id="email" onChange={this.handleChange}/>
+            <input type="email" id="email" onChange={this.handleChange} />
           </div>
           <div>
             <label htmlFor="password">Password</label>
-            <input type="password" id="password" onChange={this.handleChange}/>
+            <input type="password" id="password" onChange={this.handleChange} />
           </div>
           <div>
-             <input type="submit" value="Sign In"/>
+            <input type="submit" value="Sign In" />
           </div>
         </form>
+
+        <div className="login-wrap">
+          <div className="login-html">
+            <input id="tab-1" type="radio" name="tab" className="sign-in" checked />
+            <label htmlFor="tab-1" className="tab">Sign In</label>
+   
+            <div className="login-form">
+              <div className="sign-in-htm">
+                <div className="group">
+                  <label htmlFor="user" className="label">Username</label>
+                  <input id="user" type="text" className="input" />
+                </div>
+                <div className="group">
+                  <label htmlFor="pass" className="label">Password</label>
+                  <input id="pass" type="password" className="input" data-type="password" />
+                </div>
+                <div className="group">
+                  <input id="check" type="checkbox" className="check" checked />
+                  <label htmlFor="check"><span className="icon"></span> Keep me Signed in</label>
+                </div>
+                <div className="group">
+                  <input type="submit" className="button" value="Sign In" />
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
       </div>
     );
   }
