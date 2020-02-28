@@ -12,7 +12,6 @@ class SignIn extends Component<any, any> {
     }
   }
 
-
   handleChange = (event: any) => {
     this.setState({
       [event.target.id]: event.target.value,
@@ -33,51 +32,47 @@ class SignIn extends Component<any, any> {
 
   render = () => {
     return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
-          <h4>Sign In</h4>
-          <div>
-            <label htmlFor="email">Email</label>
-            <input type="email" id="email" onChange={this.handleChange} />
-          </div>
-          <div>
-            <label htmlFor="password">Password</label>
-            <input type="password" id="password" onChange={this.handleChange} />
-          </div>
-          <div>
-            <input type="submit" value="Sign In" />
-          </div>
-        </form>
-
-        <div className="login-wrap">
+      <React.Fragment>
+        <form className="login-wrap" onSubmit={this.handleSubmit}>
           <div className="login-html">
-            <input id="tab-1" type="radio" name="tab" className="sign-in" checked />
-            <label htmlFor="tab-1" className="tab">Sign In</label>
-   
+            <label htmlFor="form" className="tab">
+              Sign In
+            </label>
             <div className="login-form">
               <div className="sign-in-htm">
                 <div className="group">
-                  <label htmlFor="user" className="label">Username</label>
-                  <input id="user" type="text" className="input" />
+                  <label htmlFor="email" className="label">Email</label>
+                  <input
+                    id="email"
+                    type="email"
+                    className="input"
+                    onChange={this.handleChange}
+                  />
                 </div>
                 <div className="group">
                   <label htmlFor="pass" className="label">Password</label>
-                  <input id="pass" type="password" className="input" data-type="password" />
+                  <input 
+                    id="password"
+                    type="password"
+                    className="input" 
+                    data-type="password" 
+                    onChange={this.handleChange}
+                  />
                 </div>
                 <div className="group">
                   <input id="check" type="checkbox" className="check" checked />
-                  <label htmlFor="check"><span className="icon"></span> Keep me Signed in</label>
+                  <label htmlFor="check">
+                    <span className="icon"></span> Keep me Signed in
+                  </label>
                 </div>
                 <div className="group">
                   <input type="submit" className="button" value="Sign In" />
                 </div>
               </div>
-
             </div>
           </div>
-        </div>
-
-      </div>
+        </form>
+      </React.Fragment>
     );
   }
 }
