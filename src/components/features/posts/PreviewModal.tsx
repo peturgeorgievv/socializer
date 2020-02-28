@@ -5,6 +5,7 @@ import firebase from '../../../config/firebaseService';
 import { CommentData } from '../../../models/posts/CommentData';
 import { ImgData } from '../../../models/posts/ImgData';
 import { UserData } from '../../../models/users/UserData';
+import { toastr } from 'react-redux-toastr';
 
 type PreviewModalProps = {
   show: boolean;
@@ -18,7 +19,8 @@ type PreviewModalState = {
   imgData: ImgData;
   postUserData: UserData | null;
   commentData: CommentData[];
-  commentedUserData: any[]
+  commentedUserData: any[];
+  likesData: any[];
 }
 
 class PreviewModal extends Component<any, PreviewModalState> {
@@ -33,7 +35,8 @@ class PreviewModal extends Component<any, PreviewModalState> {
       imgData: this.props.imgData,
       postUserData: null,
       commentData: [],
-      commentedUserData: []
+      commentedUserData: [],
+      likesData: []
     }
   }
 
@@ -72,6 +75,18 @@ class PreviewModal extends Component<any, PreviewModalState> {
             counter++;
           })
         })
+      firebase.firestore().collection('likes')
+        .where('postId', '==', this.props.imgData.postId)
+        .onSnapshot((querySnapshot: any) => {
+          if (this._isMounted) {
+            this.setState({ likesData: [] });
+          }
+          querySnapshot.forEach((like: any) => {
+            this.setState((prevState: PreviewModalState) => ({
+              likesData: [...prevState.likesData, like.data()],
+            }));
+          })
+        })
     }
   }
 
@@ -79,50 +94,35 @@ class PreviewModal extends Component<any, PreviewModalState> {
     this._isMounted = false;
   }
 
-  // TO FIX CASE WHERE LIKE AND DISLIKE ARE JUST PUSHED TO LOCAL STATE
   handleLikeDislike = (event: any) => {
-    this.refLikes = firebase
-    .firestore()
-    .collection('posts')
-    .doc(this.props.imgData.postId);
-
     if (event.target.id === 'like-button') {
-      this.refLikes.update({
-        likes: firebase.firestore.FieldValue.arrayUnion({
-          likedBy: this.props.currentUser.documentId,
-          firstName: this.props.currentUser.firstName,
-          lastName: this.props.currentUser.lastName
-        })
-      }).then(() => {
-        if (!this.props.imgData.likes.find((user: { likedBy: any; }) => user.likedBy === this.props.currentUser.documentId)) {
-          this.props.imgData.likes.push({
-            likedBy: this.props.currentUser.documentId,
-            firstName: this.props.currentUser.firstName,
-            lastName: this.props.currentUser.lastName
-          })
-          this.setState({
-            commentText: '',
-            imgData: this.props.imgData
-          });
-        }
-      })
+    this.refLikes = firebase
+      .firestore()
+      .collection('likes')
+      .add({
+        postId: this.props.imgData.postId,
+        userId: this.props.currentUser.documentId
+      }).then((likeData: any) => {
+        firebase.firestore()
+          .collection('likes')
+          .doc(likeData.id)
+          .set({ likeId: likeData.id }, { merge: true });
+        toastr.info('Liked', this.props.imgData.title);
+      });
     } else {
-      this.refLikes.update({
-        likes: firebase.firestore.FieldValue.arrayRemove({
-          likedBy: this.props.currentUser.documentId,
-          firstName: this.props.currentUser.firstName,
-          lastName: this.props.currentUser.lastName
-        })
-      }).then(() => {
-        this.props.imgData.likes = this.props.imgData.likes.filter((likeElement: { likedBy: any; }) => {
-          return likeElement.likedBy !== this.props.currentUser.documentId;
-        })
-        this.setState({
-          commentText: '',
-          imgData: this.props.imgData
-        });
-      })
+      const likeData = this.state.likesData.find(like => like.userId === this.props.currentUser.documentId);
+      console.log(likeData);
+      this.refLikes = firebase
+      .firestore()
+      .collection('likes')
+      .doc(likeData.likeId)
+      .delete();
+      toastr.info('Unliked', this.props.imgData.title);
     }
+  }
+
+  handleEditComment = () => {
+    // TODO 
   }
 
   handleComment = (event: any) => {
@@ -143,6 +143,7 @@ class PreviewModal extends Component<any, PreviewModalState> {
           if (this._isMounted) {
             this.setState({ commentText: '' });
           }
+          toastr.info('Added comment to', this.props.imgData.title);
       });
   }
 
@@ -152,9 +153,10 @@ class PreviewModal extends Component<any, PreviewModalState> {
       .collection('comments')
       .doc(commentId)
       .delete();
+      toastr.info('Deleted comment from', this.props.imgData.title);
   }
 
-  handleChange = (event: { target: { value: any; }; }) => {
+  handleChange = (event: any) => {
     this.setState({
       commentText: event.target.value,
     });
@@ -163,13 +165,13 @@ class PreviewModal extends Component<any, PreviewModalState> {
   render = () => {
     const showHideClassName = this.props.show ? 'modal display-block' : 'modal display-none';
     const showHideUnlikeButton = 
-      this.props.imgData.likes &&
-      this.props.currentUser && 
-      this.props.imgData.likes.find((user: { likedBy: any; }) => user.likedBy === this.props.currentUser.documentId) ? 'heart-icon-liked' : 'hide-button'; 
+    this.props.currentUser && 
+    this.state.likesData.length > 0 &&
+    this.state.likesData.find((like: any) => like.userId === this.props.currentUser.documentId) ? 'heart-icon-liked' : 'hide-button'; 
     const showHideLikeButton = 
-      this.props.imgData.likes &&
-      this.props.currentUser &&
-      this.props.imgData.likes.find((user: { likedBy: any; }) => user.likedBy ===  this.props.currentUser.documentId) ? 'hide-button' : 'heart-icon-unliked'; 
+    this.props.currentUser &&
+    this.state.likesData.length > 0 &&
+    this.state.likesData.find((like: any) => like.userId ===  this.props.currentUser.documentId) ? 'hide-button' : 'heart-icon-unliked'; 
     return (
       <div className={showHideClassName}>
         <section className="modal-main">
@@ -178,9 +180,9 @@ class PreviewModal extends Component<any, PreviewModalState> {
             <div className="like-comment-buttons-container">
               <span className={showHideLikeButton} id="like-button" onClick={this.handleLikeDislike}></span>
               <span className={showHideUnlikeButton} id="dislike-button" onClick={this.handleLikeDislike}></span>
-              <span>{this.props.imgData.likes && this.props.imgData.likes.length}</span>
+              <span className="count-number">{this.state.likesData && this.state.likesData.length}</span>
               <span className="comments-icon" id="comments-icon"></span>
-              <span>{this.state.commentData && this.state.commentData.length}</span>
+              <span className="count-number">{this.state.commentData && this.state.commentData.length}</span>
             </div>
           </div>
           <div className="comments-section-container">
