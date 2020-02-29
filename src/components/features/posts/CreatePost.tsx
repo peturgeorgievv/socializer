@@ -21,6 +21,7 @@ class CreatePost extends Component<CreatePostProps, any> {
     super(props);
     this.state = {
       image: null,
+      localImage: null,
       title: '',
       description: '',
       url: '',
@@ -31,7 +32,14 @@ class CreatePost extends Component<CreatePostProps, any> {
   handleChange = (event: any) => {
     if (event.target.files && event.target.files[0]) {
       const image = event.target.files[0];
-      this.setState(({ image }));
+      let reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.setState({
+          image,
+          localImage: e.target.result
+        });
+      };
+      reader.readAsDataURL(event.target.files[0]);
     } else {
       const { name, value } = event.target
       this.setState({
@@ -76,8 +84,8 @@ class CreatePost extends Component<CreatePostProps, any> {
             });
             toastr.info('Created post with title', this.state.title);
             this.setState({
-              url,
               image: null,
+              localImage: null,
               title: '',
               description: '',
             });
@@ -101,7 +109,7 @@ class CreatePost extends Component<CreatePostProps, any> {
           <form className="login-form" onSubmit={this.handleSubmit}>
             <input type="file" onChange={this.handleChange} />
             <img
-              src={this.state.url || "https://via.placeholder.com/300x300"}
+              src={this.state.localImage || "https://via.placeholder.com/300x300"}
               alt={this.state.name}
               height="300"
               width="300"
