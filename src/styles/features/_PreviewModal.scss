@@ -94,6 +94,20 @@
   background: url('../../icons/trash-alt-solid.svg') no-repeat;
 }
 
+.delete-post-icon {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  margin-left: 20px;
+  background: url('../../icons/trash-alt-solid.svg') no-repeat;
+}
+
+.delete-post {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
 .edit-comment-icon {
   position: absolute;
   top: 0;

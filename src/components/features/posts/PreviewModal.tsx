@@ -157,6 +157,39 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
       toastr.info('Deleted comment from', this.props.imgData.title);
   }
 
+  handleDeletePost = () => {
+    // Deletes all comments from the post
+    firebase
+    .firestore()
+    .collection('comments')
+    .where('postId', '==', this.props.imgData.postId)
+    .get().then(data => {
+      data.forEach(querySnapshot => {
+        querySnapshot.ref.delete();
+      })
+    });
+
+    // Deletes all likes to the post
+    firebase
+    .firestore()
+    .collection('likes')
+    .where('postId', '==', this.props.imgData.postId)
+    .get().then(data => {
+      data.forEach(querySnapshot => {
+        querySnapshot.ref.delete();
+      })
+    });
+
+    // Deletes image from posts collection
+    firebase.firestore().collection('posts').doc(this.props.imgData.postId).delete();
+
+    // Deletes image from storage
+    firebase.storage().refFromURL(this.props.imgData.imgUrl).delete().then(() => {
+      toastr.error('Deleted post with title:', this.props.imgData.title);
+      this.props.handleClose();
+    });
+  }
+
   handleChange = (event: any) => {
     this.setState({
       commentText: event.target.value,
@@ -184,6 +217,12 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
               <span className="count-number">{this.state.likesData && this.state.likesData.length}</span>
               <span className="comments-icon" id="comments-icon"></span>
               <span className="count-number">{this.state.commentData && this.state.commentData.length}</span>
+              { this.props.imgData.uploadedBy === this.props.currentUser.documentId && 
+                <span className="delete-post" onClick={this.handleDeletePost}>
+                  <span className="delete-post-icon" id="delete-post-icon"></span>
+                  <span>Delete Post</span>
+                </span>
+              }
             </div>
           </div>
           <div className="comments-section-container">

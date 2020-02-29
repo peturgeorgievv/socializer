@@ -97,6 +97,7 @@ class CreatePost extends Component<CreatePostProps, any> {
   handleSubmit = (event: any) => {
     event.preventDefault();
     this.handleUpload();
+    event.target.file.value = '';
   }
 
   render = () => {
@@ -107,7 +108,7 @@ class CreatePost extends Component<CreatePostProps, any> {
             Create Post
             </label>
           <form className="login-form" onSubmit={this.handleSubmit}>
-            <input type="file" onChange={this.handleChange} />
+            <input type="file" name="file" onChange={this.handleChange} />
             <img
               src={this.state.localImage || "https://via.placeholder.com/300x300"}
               alt={this.state.name}
