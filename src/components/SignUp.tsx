@@ -16,7 +16,6 @@ class SignUp extends Component<any, any> {
       lastName: '',
     }
   }
-  
 
   handleChange = (event: any): void => {
     this.setState({

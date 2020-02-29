@@ -23,10 +23,12 @@ type PreviewModalState = {
   likesData: any[];
 }
 
-class PreviewModal extends Component<any, PreviewModalState> {
-  _isMounted: boolean
+class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
+  _isMounted: boolean;
+  refLikes: any;
+  refComments: any;
 
-  constructor(props: any) {
+  constructor(props: PreviewModalProps) {
     super(props);
     this._isMounted = true;
     
@@ -40,7 +42,6 @@ class PreviewModal extends Component<any, PreviewModalState> {
     }
   }
 
-  
   componentDidUpdate = async (prevProps: PreviewModalProps, prevState: PreviewModalState) => {
     if (prevProps === this.props) return;
     if (this.props.imgData.uploadedBy) {
@@ -265,8 +266,6 @@ class PreviewModal extends Component<any, PreviewModalState> {
       </div>
     );
   }
-  refLikes: any;
-  refComments: any;
 }
 
 const mapStateToProps = ({ currentUser }: any) => {

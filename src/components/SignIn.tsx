@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { login } from '../store/actions/firebaseAuth'
 import { connect } from "react-redux"
+import { toastr } from 'react-redux-toastr';
 
 class SignIn extends Component<any, any> {
   constructor(props: any) {
@@ -22,7 +23,7 @@ class SignIn extends Component<any, any> {
     event.preventDefault();
     this.props.login(this.state.email, this.state.password)
       .then(() => {
-        console.log('Logged');
+        toastr.info('Logged as', this.state.email);
         this.props.history.push('/');
       })
       .catch((error: any) => {
