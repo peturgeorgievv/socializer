@@ -108,13 +108,13 @@ class CreatePost extends Component<CreatePostProps, any> {
             Create Post
             </label>
           <form className="login-form" onSubmit={this.handleSubmit}>
-            <input type="file" name="file" onChange={this.handleChange} />
-            <img
-              src={this.state.localImage || "https://via.placeholder.com/300x300"}
-              alt={this.state.name}
-              height="300"
-              width="300"
-            />
+            <div className="image-holder">
+              <input type="file" name="file" onChange={this.handleChange} />
+              <img
+                src={this.state.localImage || "https://via.placeholder.com/300x300"}
+                alt={this.state.name}
+              />
+            </div>
             <div className="sign-in-htm">
               <div className="group">
                 <label className="label" htmlFor="title">Title</label>

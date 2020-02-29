@@ -76,3 +76,20 @@
 .login-form .group .button {
 	background: $color-search-background;
 }
+
+.image-holder {
+	text-align: center;
+
+	& img {
+		width: 300px;
+		height: 300px;
+		margin: 5px auto;
+	}
+}
+
+@media only screen and (min-device-width: $media-screen-sixth) and (max-device-width: $media-screen-fifth) {
+	.image-holder img {
+		width: 200px;
+		height: 200px;
+	}	
+}
