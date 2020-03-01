@@ -17,6 +17,7 @@ type HeaderState = {
   users: any[];
   focused: boolean;
   searchOpen: boolean;
+  showDropdownMenu: boolean;
 }
 
 class Header extends Component<HeaderProps, HeaderState> {
@@ -27,6 +28,7 @@ class Header extends Component<HeaderProps, HeaderState> {
     users: [],
     focused: false,
     searchOpen: false,
+    showDropdownMenu: false,
   }
 
   handleLogout = (event: any) => {
@@ -51,11 +53,11 @@ class Header extends Component<HeaderProps, HeaderState> {
     this.setState({
       name: event.target.value,
     });
-  
+
     this.refUsers.onSnapshot((querySnapshot: any) => {
       this.setState({ users: [] })
       querySnapshot.forEach((user: any) => {
-        if(user.data().firstName.toLocaleLowerCase().includes(this.state.name.toLocaleLowerCase())) {
+        if (user.data().firstName.toLocaleLowerCase().includes(this.state.name.toLocaleLowerCase())) {
           this.setState((prevState: HeaderState) => {
             return ({
               users: [...prevState.users, user.data()],
@@ -69,11 +71,12 @@ class Header extends Component<HeaderProps, HeaderState> {
   handleSubmit = (event: any) => {
     event.preventDefault();
     this.props.history.push(`/users/${this.state.users[0].documentId}`)
-    this.setState({ 
+    this.setState({
       focused: false,
       name: '',
-      searchOpen: !this.state.searchOpen
-     });
+      searchOpen: !this.state.searchOpen,
+      showDropdownMenu: !this.state.showDropdownMenu
+    });
   }
 
   onFocus = () => {
@@ -83,15 +86,60 @@ class Header extends Component<HeaderProps, HeaderState> {
   onBlur = () => {
     // TO THINK OF ANOTHER WAY
     setTimeout(() => {
-      this.setState({ 
+      this.setState({
         name: '',
         focused: false
-       });
+      });
     }, 300);
   }
 
   openSearch = () => {
-    this.setState({ searchOpen: !this.state.searchOpen });
+    this.setState({ 
+      searchOpen: !this.state.searchOpen,
+    });
+  }
+
+  showAndHideDropdownMenu = (event: any) => {
+    event.preventDefault();
+    this.setState({ showDropdownMenu: !this.state.showDropdownMenu });
+  }
+
+  renderSearch = () => {
+    const showHideClassName = this.state.searchOpen ? 'search open' : 'search';
+    return (
+      <form className="search-container" onSubmit={this.handleSubmit}>
+        <div className={showHideClassName}>
+          <input
+            type="search"
+            onChange={this.searchUser}
+            onFocus={this.onFocus}
+            onBlur={this.onBlur}
+            value={this.state.name}
+            className="search-box"
+          />
+          <span onClick={this.openSearch} className="search-button">
+            <span className="search-icon"></span>
+          </span>
+        </div>
+        {this.state.users.length > 0 && this.state.focused && (
+          <ul className="search-results-list">
+            {this.state.users.map((username: any, index: any) => {
+              return (
+                <li>
+                  <Link
+                    to={`/users/${username.documentId}`}
+                    key={index}
+                  >
+                    <img className="search-avatar" src={username.profilePhotoUrl} alt='avatar' />
+                    <span>{`${username.firstName} ${username.lastName}`}</span>
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
+        )}
+      </form>
+    )
   }
 
   renderContent = () => {
@@ -104,50 +152,24 @@ class Header extends Component<HeaderProps, HeaderState> {
         </React.Fragment>
       );
     }
-    const showHideClassName = this.state.searchOpen ? 'search open' : 'search';
     return (
       <React.Fragment>
-        <form className="search-container" onSubmit={this.handleSubmit}>
-          <div className={showHideClassName}>
-            <input 
-              type="search"
-              onChange={this.searchUser}
-              onFocus={this.onFocus}
-              onBlur={this.onBlur}
-              value={this.state.name}
-              className="search-box"
-            />
-            <span onClick={this.openSearch} className="search-button">
-              <span className="search-icon"></span>
-            </span>
-          </div>
-          {this.state.users.length > 0 && this.state.focused && (
-            <ul className="search-results-list">
-              {this.state.users.map((username: any, index: any) => {
-                return (
-                  <li>
-                    <Link
-                      to={`/users/${username.documentId}`} 
-                      key={index}
-                    >
-                      <img className="search-avatar" src={username.profilePhotoUrl} alt='avatar' />
-                      <span>{ `${username.firstName} ${username.lastName}` }</span>
-                    </Link>
-                  </li>
-                )
-              })}
-            </ul>
-          )}
-        </form>
-        <li><Link to="/"><span className="home-icon"></span></Link></li>
-        <li><Link to="/posts"><span className="explore-icon"></span></Link></li>
-        <li><Link to="/posts/create"><span className="create-post-icon"></span></Link></li>
-        <li>
+        { <span className="show-search"> { this.renderSearch() } </span> }
+        <li className="nav-menu">
+          <Link to="/"><span className="home-icon"></span></Link>
+        </li>
+        <li className="nav-menu">
+          <Link to="/posts"><span className="explore-icon"></span></Link>
+        </li>
+        <li className="nav-menu">
+          <Link to="/posts/create"><span className="create-post-icon"></span></Link>
+        </li>
+        <li className="nav-menu">
           <Link to={(this.props.currentUser && `/users/${this.props.currentUser.documentId}`) || '/home'}>
             <span className="profile-icon"></span>
           </Link>
         </li>
-        <li>
+        <li className="nav-menu">
           <Link to="/" onClick={this.handleLogout}>
             <span className="sign-out-icon"></span>
           </Link>
@@ -155,7 +177,7 @@ class Header extends Component<HeaderProps, HeaderState> {
       </React.Fragment>
     )
   }
-  
+
   render = () => {
     return (
       <header className="header-container">
@@ -164,8 +186,48 @@ class Header extends Component<HeaderProps, HeaderState> {
         </div>
         <nav>
           <ul className="header-nav-container">
-            { this.renderContent() }
+            {this.renderContent()}
           </ul>
+          <div className="dropdown">
+            <span className="dropdown-icon" onClick={this.showAndHideDropdownMenu}></span>
+            {
+              this.state.showDropdownMenu &&
+              (
+                <div className="dropdown-menu">
+                  <ul>
+                    { this.renderSearch() }
+                    <li className="" onClick={this.showAndHideDropdownMenu}>
+                      <Link to="/"><span className="home-icon"></span>
+                        Home
+                      </Link>
+                    </li>
+                    <li className="" onClick={this.showAndHideDropdownMenu}>
+                      <Link to="/posts"><span className="explore-icon"></span>
+                        Explore
+                      </Link>
+                    </li>
+                    <li className="" onClick={this.showAndHideDropdownMenu}>
+                      <Link to="/posts/create"><span className="create-post-icon"></span>
+                      Create Post
+                      </Link>
+                    </li>
+                    <li className="" onClick={this.showAndHideDropdownMenu}>
+                      <Link to={(this.props.currentUser && `/users/${this.props.currentUser.documentId}`) || '/home'}>
+                        <span className="profile-icon"></span>
+                        Profile
+                      </Link>
+                    </li>
+                    <li className="" onClick={this.showAndHideDropdownMenu}>
+                      <Link to="/" onClick={this.handleLogout}>
+                        <span className="sign-out-icon"></span>
+                        Sign Out
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              )
+            }
+          </div>
         </nav>
       </header>
     );
