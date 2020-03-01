@@ -13,13 +13,13 @@ const store = createStore(combinedReducers, applyMiddleware(thunk));
 ReactDOM.render(
 	<Provider store={store}>
 		 <ReduxToastr
-      timeOut={3000}
-      newestOnTop={false}
-      preventDuplicates
-      position="bottom-right"
-      transitionIn="fadeIn"
-      transitionOut="fadeOut"
-      closeOnToastrClick
+         timeOut={3000}
+         newestOnTop={false}
+         preventDuplicates
+         position="bottom-right"
+         transitionIn="fadeIn"
+         transitionOut="fadeOut"
+         closeOnToastrClick
 		/>
 		<App />
 	</Provider>,

@@ -102,12 +102,12 @@ class CreatePost extends Component<CreatePostProps, any> {
 
   render = () => {
     return (
-      <div className="login-wrap" >
-        <div className="login-html">
+      <div className="create-post-wrap" >
+        <div className="create-post-html">
           <label htmlFor="create-post" className="tab">
             Create Post
             </label>
-          <form className="login-form" onSubmit={this.handleSubmit}>
+          <form className="create-post-form" onSubmit={this.handleSubmit}>
             <div className="image-holder">
               <input type="file" name="file" onChange={this.handleChange} />
               <img
@@ -115,7 +115,7 @@ class CreatePost extends Component<CreatePostProps, any> {
                 alt={this.state.name}
               />
             </div>
-            <div className="sign-in-htm">
+            <div>
               <div className="group">
                 <label className="label" htmlFor="title">Title</label>
                 <input

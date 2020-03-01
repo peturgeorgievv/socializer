@@ -217,7 +217,8 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
               <span className="count-number">{this.state.likesData && this.state.likesData.length}</span>
               <span className="comments-icon" id="comments-icon"></span>
               <span className="count-number">{this.state.commentData && this.state.commentData.length}</span>
-              { this.props.imgData.uploadedBy === this.props.currentUser.documentId && 
+              { this.props.imgData && this.props.currentUser &&
+                this.props.imgData.uploadedBy === this.props.currentUser.documentId && 
                 <span className="delete-post" onClick={this.handleDeletePost}>
                   <span className="delete-post-icon" id="delete-post-icon"></span>
                   <span>Delete Post</span>

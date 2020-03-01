@@ -21,11 +21,11 @@
 
 .login-html .tab,
 .login-form .group .label,
-.login-form .group .button{
+.login-form .group .button {
 	text-transform:uppercase;
 }
 
-.login-html .tab{
+.login-html .tab {
 	display:inline-block;
 	margin:0 15px 10px 0;
 	padding-bottom:5px;
@@ -33,16 +33,16 @@
 	font-weight: $font-bold;
 }
 
-.login-form{
+.login-form {
 	position:relative;
 	min-height:320px;
 }
 
-.login-form .group{
+.login-form .group {
 	margin-bottom:15px;
 }
 
-.login-form .group .button{
+.login-form .group .button {
 	display:block;
 	width:100%;
 	color: $color-navbar-fonts;
@@ -56,7 +56,7 @@
 }
 
 .login-form .group .input,
-.login-form .group .button{
+.login-form .group .button {
 	padding: 15px 20px;
 	outline: none;
 	background: $color-background-primary;
@@ -68,11 +68,11 @@
 	background: $color-sign-buttons-hover;
 }
 
-.login-form .group .label{
+.login-form .group .label {
 	color: $color-search-background;
 	font-size:12px;
 }
 
-.login-form .group .button{
+.login-form .group .button {
 	background: $color-search-background;
 }
