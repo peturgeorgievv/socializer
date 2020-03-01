@@ -6,10 +6,23 @@ import firebase from '../../config/firebaseService';
 import { logout } from '../../store/actions/firebaseAuth';
 import { getAuthenticationStatus } from '../../config/authService';
 
-class Header extends Component<any, any> {
+type HeaderProps = {
+  currentUser: any;
+  logout: any;
+  history: any;
+}
+
+type HeaderState = {
+  name: string;
+  users: any[];
+  focused: boolean;
+  searchOpen: boolean;
+}
+
+class Header extends Component<HeaderProps, HeaderState> {
   refUsers: any;
 
-  state: any = {
+  state: HeaderState = {
     name: '',
     users: [],
     focused: false,
@@ -43,9 +56,11 @@ class Header extends Component<any, any> {
       this.setState({ users: [] })
       querySnapshot.forEach((user: any) => {
         if(user.data().firstName.toLocaleLowerCase().includes(this.state.name.toLocaleLowerCase())) {
-          this.setState((prevState: any) => ({
-            users: [...prevState.users, user.data()],
-          }));
+          this.setState((prevState: HeaderState) => {
+            return ({
+              users: [...prevState.users, user.data()],
+            });
+          });
         }
       })
     })
@@ -110,25 +125,33 @@ class Header extends Component<any, any> {
             <ul className="search-results-list">
               {this.state.users.map((username: any, index: any) => {
                 return (
-                  <Link
-                    to={`/users/${username.documentId}`} 
-                    key={index}
-                  >
-                      <li>
-                        <img className="search-avatar" src={username.profilePhotoUrl} alt='avatar' />
-                        <span>{ `${username.firstName} ${username.lastName}` }</span>
-                      </li>
-                  </Link>
+                  <li>
+                    <Link
+                      to={`/users/${username.documentId}`} 
+                      key={index}
+                    >
+                      <img className="search-avatar" src={username.profilePhotoUrl} alt='avatar' />
+                      <span>{ `${username.firstName} ${username.lastName}` }</span>
+                    </Link>
+                  </li>
                 )
               })}
             </ul>
           )}
         </form>
-        <Link to="/"><li><span className="home-icon"></span></li></Link>
-        <Link to="/posts"><li><span className="explore-icon"></span></li></Link>
-        <Link to="/posts/create"><li><span className="create-post-icon"></span></li></Link>
-        <Link to={(this.props.currentUser && `/users/${this.props.currentUser.documentId}`) || '/home'}><li><span className="profile-icon"></span></li></Link>
-        <Link to="/" onClick={this.handleLogout}><li><span className="sign-out-icon"></span></li></Link>
+        <li><Link to="/"><span className="home-icon"></span></Link></li>
+        <li><Link to="/posts"><span className="explore-icon"></span></Link></li>
+        <li><Link to="/posts/create"><span className="create-post-icon"></span></Link></li>
+        <li>
+          <Link to={(this.props.currentUser && `/users/${this.props.currentUser.documentId}`) || '/home'}>
+            <span className="profile-icon"></span>
+          </Link>
+        </li>
+        <li>
+          <Link to="/" onClick={this.handleLogout}>
+            <span className="sign-out-icon"></span>
+          </Link>
+        </li>
       </React.Fragment>
     )
   }

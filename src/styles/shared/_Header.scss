@@ -18,7 +18,7 @@
 .header-nav-container li {
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 5px;
 }
 
 .header-nav-container li:hover {
@@ -31,8 +31,8 @@
 
 .logo-icon {
   display: block;
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   background: url('../../icons/instagram-square-brands.svg') no-repeat;
 }
 
@@ -100,7 +100,7 @@
 .search {
   position: relative;
   width: 70px;
-  height: 70px;
+  height: 60px;
   overflow: hidden;
   background-color: $color-search-background;
   transition: $transition;
@@ -138,13 +138,12 @@
 }
 
 .search-button {
-  width: 100px;
-  height: 100px;
-  display: block;
   position: absolute;
-  right: -15px;
-  top: -15px;
-  padding: 20px;
+  right: 10px;
+  top: 2px;
+  display: block;
+  width: 50px;
+  height: 50px;
   cursor: pointer;
 }
 
@@ -153,7 +152,7 @@
   display: block;
   width: 40px;
   height: 40px;
-  margin-left: 5px;
+  margin: 5px;
   border-radius: 40px;
   border: 3px solid $color-icon;
   transition: $transition;
@@ -172,29 +171,29 @@
   &:after {
     content: '';
     position: absolute;
-    right: -12px;
-    top: 40px;
+    right: -8px;
+    top: 39px;
     display: block;
     width: 3px;
-    height: 15px;
+    height: 9px;
     background-color: $color-icon;
     transform: rotate(-45deg);
     transition: $transition;
   }
   .open & {
-    width: 60px;
-    height: 60px;
+    width: 55px;
+    height: 55px;
     margin: 0;
     border-radius: 60px;
     &:before {
-      top: 23px;
-      right: 22px;
+      top: 21px;
+      right: 20px;
       height: 18px;
       transform: rotate(52deg);
     }
     &:after {
-      top: 13px;
-      right: 22px;
+      top: 11px;
+      right: 20px;
       height: 18px;
       transform: rotate(-230deg);
     }
@@ -206,4 +205,21 @@
   z-index: 99;
   width: 100%;
   background: $color-search-background;
+}
+
+@media only screen and (min-device-width: $media-screen-sixth) and (max-device-width: $media-screen-fifth) {
+  .search.open {
+    width: 300px;
+  }
+
+  // .search-button {
+  //   width: 60px;
+  //   height: 60px;
+  //   display: block;
+  //   position: absolute;
+  //   right: -15px;
+  //   top: -15px;
+  //   padding: 0px;
+  //   cursor: pointer;
+  // }
 }
