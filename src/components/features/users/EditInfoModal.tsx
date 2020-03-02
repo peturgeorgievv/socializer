@@ -4,6 +4,7 @@ import firebase from '../../../config/firebaseService';
 class EditInfoModal extends Component<any, any> {
   state: any = {
     image: null,
+    localImage: null,
     url: '',
     description: this.props.userData.description,
     firstName: this.props.userData.firstName,
@@ -22,33 +23,33 @@ class EditInfoModal extends Component<any, any> {
     }
   }
 
-  
+
   handleUpload = () => {
     const { image } = this.state;
     const uploadTask = firebase.storage().ref(`images/${image.name}`).put(image);
-      uploadTask.on( 
-        "state_changed",
-        () => {},
-        (error: any) => {
-          console.log(error);
-        },
-        () => {
-          firebase
-            .storage()
-            .ref("images")
-            .child(image.name)
-            .getDownloadURL()
-            .then((url: any) => {
-              console.log(url);
-              firebase.firestore().collection('users').doc(this.props.userData.documentId).set({
-                profilePhotoUrl: url,
-                firstName: this.state.firstName,
-                lastName: this.state.lastName,
-                description: this.state.description,
-              }, { merge: true });
-              this.setState({ url });
-            });
-        }
+    uploadTask.on(
+      "state_changed",
+      () => { },
+      (error: any) => {
+        console.log(error);
+      },
+      () => {
+        firebase
+          .storage()
+          .ref("images")
+          .child(image.name)
+          .getDownloadURL()
+          .then((url: any) => {
+            console.log(url);
+            firebase.firestore().collection('users').doc(this.props.userData.documentId).set({
+              profilePhotoUrl: url,
+              firstName: this.state.firstName,
+              lastName: this.state.lastName,
+              description: this.state.description,
+            }, { merge: true });
+            this.setState({ url });
+          });
+      }
     );
   };
 
@@ -65,47 +66,72 @@ class EditInfoModal extends Component<any, any> {
       }, { merge: true });
     }
   }
- 
+
   render = () => {
     const showHideClassName = this.props.show ? 'modal display-block' : 'modal display-none';
 
     return (
       <div className={showHideClassName}>
         <section className="modal-main-edit">
-          <div>
-            <form className="comment-form" onSubmit={this.handleSubmit}>
-              <div>
-              <input type="file" onChange={this.handleChange} />
-                <img 
-                  className="avatar"
-                  src={this.state.url || this.props.userData.profilePhotoUrl || "https://www.esportschampionships.tv/wp-content/uploads/2019/09/341-3415688_no-avatar-png-transparent-png.jpg"} 
-                  alt="modal"
-                />
-              </div>
-              <div>
-                <label htmlFor="firstName">First Name</label>
-                <input name="firstName" type="text" value={this.state.firstName} onChange={this.handleChange} />
-              </div>
-              <div>
-                <label htmlFor="lastName">Last Name</label>
-                <input name="lastName" type="text" value={this.state.lastName} onChange={this.handleChange} />
-              </div>
-              <div>
-              <label htmlFor="description">Description</label>
-                <textarea
-                  name="description"
-                  value={this.state.description}
-                  onChange={this.handleChange}
-                  placeholder="Enter a description"
-                  rows={5}
-                  cols={50}
-                >
-                </textarea>
-              </div>
-              <button type="submit">Update Info</button>
-            </form>
+          <div className="edin-info-wrap" >
+            <div className="edit-info-html">
+              <label htmlFor="edit-info" className="tab">
+                User Info
+            </label>
+              <form className="edit-profile-form" onSubmit={this.handleSubmit}>
+                <div className="image-holder-edit">
+                  <input type="file" name="file" onChange={this.handleChange} />
+                  <img
+                    src={
+                      this.state.localImage || 
+                      this.props.userData.profilePhotoUrl || 
+                      "https://www.esportschampionships.tv/wp-content/uploads/2019/09/341-3415688_no-avatar-png-transparent-png.jpg"
+                    }
+                    alt={this.state.name}
+                  />
+                </div>
+                <div>
+                  <div className="group">
+                    <label className="label" htmlFor="title">First Name</label>
+                    <input
+                      name="firstName"
+                      type="text"
+                      className="input"
+                      onChange={this.handleChange}
+                      value={this.state.firstName}
+                    />
+                  </div>
+                  <div className="group">
+                    <label className="label" htmlFor="title">Last Name</label>
+                    <input
+                      name="lastName"
+                      type="text"
+                      className="input"
+                      onChange={this.handleChange}
+                      value={this.state.lastName}
+                    />
+                  </div>
+                  <div className="group">
+                    <label className="label" htmlFor="description">Description</label>
+                    <textarea
+                      name="description"
+                      className="input"
+                      onChange={this.handleChange}
+                      value={this.state.description}
+                      rows={3}
+                      cols={50}>
+                    </textarea>
+                  </div>
+                  <div className="group">
+                    <input type="submit" className="button" value="Update" />
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
-          <button onClick={this.props.handleClose}>close</button>
+          <button className="close-modal" onClick={this.props.handleClose}>
+            <span className="close-modal-icon"></span>
+          </button>
         </section>
       </div>
     );
