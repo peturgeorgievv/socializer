@@ -1,34 +1,65 @@
 .user-data-container {
   display: flex;
-  align-items: center;
-  width: 60%;
-  margin: 10px auto;
-  padding: 5px;
-  line-height: 1.6;
-  border: 7px solid #98D1FA;
-  border-radius: 25px;
+  width: 50%;
+  margin: 15px auto;
+  line-height: 1.8;
 }
 
 .avatar {
-  display: flex;
   margin-right: 15px;
-  align-items: center;
 }
 
 .avatar img {
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 150px;
   margin: auto;
   cursor: pointer;
   border-radius: 25px;
 }
 
-.user-info-container {
+.user-info-name {
   font-weight: $font-bold;
 }
 
-.user-info-follows span {
-  margin-right: 15px;
+.user-info-follows {
+  display: flex;
+  align-items: center;
+}
+
+.posts-length {
+  margin: 0 10px 0 5px;
+}
+
+.posts-number {
+  font-weight: $font-bold;
+}
+
+.posts-icon {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  background: url('../../icons/images-solid.svg') no-repeat;
+}
+
+.edit-icon {
+  display: block;
+  width: 30px;
+  height: 30px;
+  background: url('../../icons/user-edit-solid.svg') no-repeat;
+}
+
+.follow-user-icon {
+  display: block;
+  width: 30px;
+  height: 30px;
+  background: url('../../icons/user-plus-solid.svg') no-repeat;
+}
+
+.unfollow-user-icon {
+  display: block;
+  width: 30px;
+  height: 30px;
+  background: url('../../icons/user-minus-solid.svg') no-repeat;
 }
 
 .user-info-buttons button {
@@ -47,9 +78,29 @@
 }
 
 .followers-link {
+  margin-right: 10px;
   cursor: pointer;
 }
 
 .following-link {
   cursor: pointer;
+}
+
+@media (min-width: $media-screen-sixth) and (max-width: $media-screen-third) {
+  .user-data-container {
+    flex-wrap: wrap;
+    width: 80%;
+  }
+
+  .avatar {
+    margin: 10px auto;
+  }
+
+  .followers-link {
+    display: flex;
+  }
+  
+  .following-link {
+    display: flex;
+  }
 }

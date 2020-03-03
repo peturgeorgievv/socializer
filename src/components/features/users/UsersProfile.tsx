@@ -90,9 +90,17 @@ class UsersProfile extends Component<any, any> {
   renderFollowButton = () => {
     const userIsFollower = this.state.userData.followers.find((userId: { userDocumentId: any; }) => this.props.currentUser.documentId === userId.userDocumentId);
     if (userIsFollower) {
-      return <button onClick={this.toggleFollowButton}>Unfollow</button>
+      return (
+        <button onClick={this.toggleFollowButton}>
+          <span className="unfollow-user-icon"></span>
+        </button>
+      )
     } else if (!userIsFollower && this.state.userData.documentId !== this.props.currentUser.documentId) {
-      return <button onClick={this.toggleFollowButton}>Follow</button>
+      return (
+        <button onClick={this.toggleFollowButton}>
+          <span className="follow-user-icon"></span>
+        </button>
+      )
     }
   }
 
@@ -256,16 +264,17 @@ class UsersProfile extends Component<any, any> {
               {`${this.state.userData.email}`}
               </div>
               <div className="user-info-follows">
-                <span>Posts: {this.state.posts.length}</span>
+                <span className="posts-icon"></span>
+                <span className="posts-length posts-number">{this.state.posts.length}</span>
                 <span 
                   className="followers-link"
                   onClick={() => this.showFollowersModal(this.state.userData)}>
-                  Followers: {this.state.userData.followers.length}
+                  Followers: <span className="posts-number">{this.state.userData.followers.length}</span>
                 </span>
                 <span 
                   className="following-link"
                   onClick={() => this.showFollowingModal(this.state.userData)}>
-                  Following: {this.state.userData.following.length}
+                  Following: <span className="posts-number">{this.state.userData.following.length}</span>
                 </span>
               </div>
               <div className="user-info-description">
@@ -274,7 +283,9 @@ class UsersProfile extends Component<any, any> {
               <div className="user-info-buttons">
               {
                 this.state.userData.documentId === this.props.currentUser.documentId && 
-                <button onClick={() => this.showEditInfoModal(this.state.userData)}>Edit</button>
+                <button onClick={() => this.showEditInfoModal(this.state.userData)}>
+                  <span className="edit-icon"></span>
+                </button>
               }  
                 { this.renderFollowButton() }
               </div>
