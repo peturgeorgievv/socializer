@@ -107,16 +107,14 @@
 
 @media only screen and (min-device-width: $media-screen-sixth) and (max-device-width: $media-screen-fifth) {
   .modal-main-edit {
-    max-height: 100vh;
-    max-width: 320px;
-	}
-	
-	.modal-main-edit {
 		position: relative;
 		top: 0;
 		left: 0;
 		overflow-y: initial;
+		overflow-x: hidden;
 		transform: translate(0, 0);
+    max-height: 100vh;
+    max-width: 320px;
 	}
 
 	.image-holder-edit img {

@@ -21,6 +21,8 @@ type PreviewModalState = {
   commentData: CommentData[];
   commentedUserData: any[];
   likesData: any[];
+  showForm: boolean;
+  editCommentText: string;
 }
 
 class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
@@ -38,7 +40,9 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
       postUserData: null,
       commentData: [],
       commentedUserData: [],
-      likesData: []
+      likesData: [],
+      showForm: false,
+      editCommentText: ''
     }
   }
 
@@ -122,8 +126,23 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
     }
   }
 
-  handleEditComment = () => {
+  handleEditCommentToFirebase = (commentId: string) => {
     // TODO 
+    firebase
+      .firestore()
+      .collection('comments')
+      .doc(commentId)
+      .set({
+        description: this.state.editCommentText
+      }, { merge: true })
+      .then(() => {
+        toastr.info('Edited comment', this.state.editCommentText);
+        this.setState({ editCommentText: '' });
+      })
+  }
+
+  handleEditCommentForm = (event: any) => {
+
   }
 
   handleComment = (event: any) => {
@@ -192,7 +211,13 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
 
   handleChange = (event: any) => {
     this.setState({
-      commentText: event.target.value,
+      commentText: event.target.value
+    });
+  }
+
+  handleEditChange = (event: any) => {
+    this.setState( {
+      editCommentText: event.target.value
     });
   }
   
@@ -277,7 +302,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
                         ) &&
                         <React.Fragment>
                           <span onClick={() => this.handleDeleteComment(commentData.commentId)} className="delete-comment-icon"></span>
-                          <span className="edit-comment-icon"></span>
+                          <span onClick={() => this.setState({ showForm: !this.state.showForm })} className="edit-comment-icon"></span>
                         </React.Fragment>
                         }
                         <Link to={`/users/${userData.documentId}`}>
@@ -290,7 +315,18 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
                           </span>
                         </Link>
                         <span className="comment-date">{commentData.createdOn}</span>
-                        <div className="comment-description">{`${commentData.description}`}</div>
+                        <div className="comment-description">
+                          { this.state.showForm ?
+                           <form onSubmit={() => this.handleEditCommentToFirebase(commentData.commentId)}>
+                             <input 
+                              type="text" 
+                              onChange={this.handleEditChange}
+                              value={this.state.editCommentText}
+                            />
+                           </form> : 
+                            `${commentData.description}`}
+
+                        </div>
                       </div>
                     </React.Fragment>
                     }
