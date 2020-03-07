@@ -6,6 +6,7 @@ import { CommentData } from '../../../models/posts/CommentData';
 import { ImgData } from '../../../models/posts/ImgData';
 import { UserData } from '../../../models/users/UserData';
 import { toastr } from 'react-redux-toastr';
+import SingleComment from './SingleComment';
 
 type PreviewModalProps = {
   show: boolean;
@@ -22,7 +23,6 @@ type PreviewModalState = {
   commentedUserData: any[];
   likesData: any[];
   showForm: boolean;
-  editCommentText: string;
 }
 
 class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
@@ -42,15 +42,20 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
       commentedUserData: [],
       likesData: [],
       showForm: false,
-      editCommentText: ''
     }
   }
 
   componentDidUpdate = async (prevProps: PreviewModalProps, prevState: PreviewModalState) => {
     if (prevProps === this.props) return;
     if (this.props.imgData.uploadedBy) {
-      firebase.firestore().collection('users').doc(this.props.imgData.uploadedBy).get().then((userSnapshot: any) => {
-        this.setState({ postUserData: userSnapshot.data() });
+      firebase.firestore()
+        .collection('users')
+        .doc(this.props.imgData.uploadedBy)
+        .get()
+        .then((userSnapshot: any) => {
+          if (this._isMounted) {
+            this.setState({ postUserData: userSnapshot.data() });
+          }
       })
     }
 
@@ -126,25 +131,6 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
     }
   }
 
-  handleEditCommentToFirebase = (commentId: string) => {
-    // TODO 
-    firebase
-      .firestore()
-      .collection('comments')
-      .doc(commentId)
-      .set({
-        description: this.state.editCommentText
-      }, { merge: true })
-      .then(() => {
-        toastr.info('Edited comment', this.state.editCommentText);
-        this.setState({ editCommentText: '' });
-      })
-  }
-
-  handleEditCommentForm = (event: any) => {
-
-  }
-
   handleComment = (event: any) => {
     event.preventDefault();
     this.refComments = firebase
@@ -165,15 +151,6 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
           }
           toastr.info('Added comment to', this.props.imgData.title);
       });
-  }
-
-  handleDeleteComment = (commentId: string) => {
-    firebase
-      .firestore()
-      .collection('comments')
-      .doc(commentId)
-      .delete();
-      toastr.info('Deleted comment from', this.props.imgData.title);
   }
 
   handleDeletePost = () => {
@@ -212,12 +189,6 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
   handleChange = (event: any) => {
     this.setState({
       commentText: event.target.value
-    });
-  }
-
-  handleEditChange = (event: any) => {
-    this.setState( {
-      editCommentText: event.target.value
     });
   }
   
@@ -290,44 +261,12 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
                   <div key={index} className="single-comment">
                     { userData &&
                     <React.Fragment>
-                      <div className="single-comment-img-container">
-                        <Link to={`/users/${userData.documentId}`}>
-                          <img src={userData.profilePhotoUrl} alt="avatar" />
-                        </Link>
-                      </div>
-                      <div>
-                        {(
-                          this.props.currentUser.documentId === commentData.userId ||
-                          this.props.currentUser.documentId === this.state.postUserData?.documentId
-                        ) &&
-                        <React.Fragment>
-                          <span onClick={() => this.handleDeleteComment(commentData.commentId)} className="delete-comment-icon"></span>
-                          <span onClick={() => this.setState({ showForm: !this.state.showForm })} className="edit-comment-icon"></span>
-                        </React.Fragment>
-                        }
-                        <Link to={`/users/${userData.documentId}`}>
-                          <span>
-                            <strong>
-                              { this.state.commentedUserData.length > 0 &&
-                                userData &&
-                              `${userData.firstName} ${userData.lastName}` }
-                            </strong>
-                          </span>
-                        </Link>
-                        <span className="comment-date">{commentData.createdOn}</span>
-                        <div className="comment-description">
-                          { this.state.showForm ?
-                           <form onSubmit={() => this.handleEditCommentToFirebase(commentData.commentId)}>
-                             <input 
-                              type="text" 
-                              onChange={this.handleEditChange}
-                              value={this.state.editCommentText}
-                            />
-                           </form> : 
-                            `${commentData.description}`}
-
-                        </div>
-                      </div>
+                      <SingleComment 
+                        commentData={commentData}
+                        userData={userData}
+                        postUserData={this.state.postUserData}
+                        commentedUserData={this.state.commentedUserData}
+                      />
                     </React.Fragment>
                     }
                   </div>
