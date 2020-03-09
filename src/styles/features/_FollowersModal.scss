@@ -3,21 +3,74 @@
   top:50%;
   left:50%;
   overflow-y: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
   width: 40%;
   max-height: calc(100vh - 210px);
-  background: white;
+  background: $color-background-primary;
+  border-radius: 12px;
   transform: translate(-50%,-50%);
+
+  .close-modal-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 35px;
+    height: 35px;
+    margin: 5px 5px 0 0;
+    cursor: pointer;
+    background: url('../../icons/window-close-solid.svg') no-repeat;
+  }
+
+  .modal-avatar {
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+    padding: 5px;
+  }
+  
+  .display-block {
+    display: block;
+  }
+  
+  .display-none {
+    display: none;
+  }
+
+  .link-container {
+    width: 90%;
+    margin: 5px auto;
+    padding: 0 10px;
+    border: 1px solid $color-search-background;
+    border-radius: 5px;
+    background: $color-background-secondary;
+
+    .follower-container {
+      display: flex;
+      align-items: center;
+  
+      .followers-name {
+        font-weight: 600;
+      }
+    }
+    &:first-of-type {
+      margin-top: 10px;
+    }
+  }
 }
 
-.modal-avatar {
-  width: 80px;
-  height: 80px;
+@media (min-width: $media-screen-sixth) and (max-width: $media-screen-third) {
+  .modal-main-followers {
+    position: relative;
+    top: 20%;
+    left: 0;
+		overflow-x: hidden;
+		overflow-y: initial;
+    width: 100%;
+    max-height: 100vh;
+    transform: translate(0, 0);
+  }
 }
 
-.display-block {
-  display: block;
-}
 
-.display-none {
-  display: none;
-}
