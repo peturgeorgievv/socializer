@@ -2,11 +2,23 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PreviewModal from './features/posts/PreviewModal';
 import firebase from '../config/firebaseService';
+import { ImgData } from '../models/posts/ImgData';
 
-class Home extends Component<any,any> {
+type HomeProps = {
+  currentUser: any;
+}
+
+type HomeState = {
+  show: boolean;
+  posts: any[];
+  imgData: any;
+}
+
+class Home extends Component<HomeProps, HomeState> {
   _isMounted: boolean;
   ref: any;
   unsubscribe: any;
+
   constructor(props: any) {
     super(props);
     this._isMounted = true;
@@ -20,9 +32,20 @@ class Home extends Component<any,any> {
       imgData: [],
     }
   }
+
   componentDidMount = () => {
     this.ref = this.ref.onSnapshot(this.onCollectionUpdate);
     this.unsubscribe = this.ref;
+  }
+
+  componentDidUpdate = async (prevProps: HomeProps, prevState: HomeState) => {
+    if (prevProps.currentUser) return;
+    if (this.props.currentUser) {
+      this.ref = firebase
+        .firestore()
+        .collection('posts')
+        .onSnapshot(this.onCollectionUpdate);
+    }
   }
 
   componentWillUnmount = () => {
@@ -31,7 +54,7 @@ class Home extends Component<any,any> {
     this.unsubscribe = null;
   }
   
-  showModal = (imgData: any) => {
+  showModal = (imgData: ImgData) => {
     this.setState({ 
       show: true,
       imgData,
