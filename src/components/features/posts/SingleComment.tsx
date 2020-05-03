@@ -39,6 +39,7 @@ class SingleComment extends Component<SingleCommentProps, SingleCommentState> {
 
   handleSubmit = (event: any) => {
     event.preventDefault();
+    if (!this.props.currentUser) return;
     firebase
       .firestore()
       .collection('comments')
@@ -87,7 +88,9 @@ class SingleComment extends Component<SingleCommentProps, SingleCommentState> {
           </Link>
         </div>
         <div>
-          {(
+          {
+          this.props.currentUser &&
+          (
             this.props.currentUser.documentId === this.props.commentData.userId ||
             this.props.currentUser.documentId === this.props.postUserData?.documentId
           ) &&

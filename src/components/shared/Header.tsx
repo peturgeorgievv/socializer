@@ -35,7 +35,7 @@ class Header extends Component<HeaderProps, HeaderState> {
     event.preventDefault();
     this.refUsers = null;
     this.props.logout();
-    window.location.href = '/'
+    window.location.href = '/posts'
     console.log('Logged out');
   }
 
@@ -181,7 +181,10 @@ class Header extends Component<HeaderProps, HeaderState> {
     return (
       <header className="header-container">
         <div className="logo-container">
-          <Link to="/"><span className="logo-icon"></span></Link>
+          { this.props.currentUser ? 
+            <Link to="/"><span className="home-icon"></span></Link>
+            : <Link to="/posts"><span className="home-icon"></span></Link>
+          }
         </div>
         <nav>
           <ul className="header-nav-container">

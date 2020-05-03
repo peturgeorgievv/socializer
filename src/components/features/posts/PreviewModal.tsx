@@ -105,6 +105,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
   }
 
   handleLikeDislike = (event: any) => {
+    if (!this.props.currentUser) return;
     if (event.target.id === 'like-button') {
     this.refLikes = firebase
       .firestore()
@@ -133,6 +134,11 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
 
   handleComment = (event: any) => {
     event.preventDefault();
+    if (!this.props.currentUser) {
+      toastr.warning('Please Login First', '');
+      return;
+    };
+    
     this.refComments = firebase
       .firestore()
       .collection('comments')
