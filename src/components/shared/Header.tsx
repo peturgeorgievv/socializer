@@ -125,13 +125,12 @@ class Header extends Component<HeaderProps, HeaderState> {
           <ul className="search-results-list">
             {this.state.users.map((username: any, index: any) => {
               return (
-                <li>
+                <li key={index}>
                   <Link
                     to={`/users/${username.documentId}`}
-                    key={index}
                   >
-                    <img className="search-avatar" src={username.profilePhotoUrl} alt='avatar' />
-                    <span>{`${username.firstName} ${username.lastName}`}</span>
+                    <img className="search-avatar" src={username.profilePhotoUrl || "https://www.esportschampionships.tv/wp-content/uploads/2019/09/341-3415688_no-avatar-png-transparent-png.jpg"} alt='avatar' />
+                    <span className="user-name">{`${username.firstName} ${username.lastName}`}</span>
                   </Link>
                 </li>
               )

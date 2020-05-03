@@ -62,7 +62,7 @@ class FollowingModal extends Component<FollowingModalProps, FollowingModalState>
             return (
             <Link to={`/users/${following.documentId}`} key={index} className="link-container">
               <div className="following-container">
-                <img className="modal-avatar" src={following.profilePhotoUrl} alt="avatar"/>
+                <img className="modal-avatar" src={following.profilePhotoUrl || "https://www.esportschampionships.tv/wp-content/uploads/2019/09/341-3415688_no-avatar-png-transparent-png.jpg"} alt="avatar"/>
                 <span className="following-name">{`${following.firstName} ${following.lastName}`}</span>
               </div>
             </Link>
