@@ -60,12 +60,6 @@ class SignIn extends Component<any, any> {
                 />
               </div>
               <div className="group">
-                <input id="check" type="checkbox" className="check" checked />
-                <label htmlFor="check">
-                  <span className="icon"></span> Keep me Signed in
-                </label>
-              </div>
-              <div className="group">
                 <input type="submit" className="button" value="Sign In" />
               </div>
             </div>

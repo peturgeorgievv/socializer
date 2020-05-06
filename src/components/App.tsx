@@ -12,8 +12,9 @@ import { fetchUser } from '../store/actions/firebaseAuth'
 import { getUserPosts } from '../store/actions/firebaseImages';
 
 type AppProps = any;
+type AppState = {};
 
-class App extends Component<any,any> {
+class App extends Component<AppProps, AppState> {
   refUser: any;
   refPhotos: any;
   refUserFromParams: any;

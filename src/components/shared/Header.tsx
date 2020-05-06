@@ -145,9 +145,9 @@ class Header extends Component<HeaderProps, HeaderState> {
     if (!getAuthenticationStatus()) {
       return (
         <React.Fragment>
-          <Link to="/posts"><li><span className="explore-icon"></span></li></Link>
-          <Link to="/signup"><li><span className="sign-up-icon"></span></li></Link>
-          <Link to="/signin"><li><span className="sign-in-icon"></span></li></Link>
+          <Link to="/posts"><li className="nav-menu"><span className="explore-icon"></span></li></Link>
+          <Link to="/signup"><li className="nav-menu"><span className="sign-up-icon"></span></li></Link>
+          <Link to="/signin"><li className="nav-menu"><span className="sign-in-icon"></span></li></Link>
         </React.Fragment>
       );
     }
@@ -182,8 +182,8 @@ class Header extends Component<HeaderProps, HeaderState> {
       <header className="header-container">
         <div className="logo-container">
           { this.props.currentUser ? 
-            <Link to="/"><span className="home-icon"></span></Link>
-            : <Link to="/posts"><span className="home-icon"></span></Link>
+            <Link to="/"><span className="logo-icon"></span></Link>
+            : <Link to="/posts"><span className="logo-icon"></span></Link>
           }
         </div>
         <nav>
