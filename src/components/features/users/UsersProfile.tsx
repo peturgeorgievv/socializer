@@ -6,7 +6,22 @@ import FollowersModal from './FollowersModal';
 import FollowingModal from './FollowingModal';
 import EditInfoModal from './EditInfoModal';
 
-class UsersProfile extends Component<any, any> {
+type UsersProfileProps = {
+  currentUser: any;
+  match: any;
+}
+
+type UsersProfileState = {
+  userData: any;
+  posts: any;
+  show: boolean;
+  showFollowers: boolean;
+  showFollowing: boolean;
+  showEditInfo: boolean;
+  imgData: any;
+}
+
+class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
   _isMounted: boolean;
   refUserData: any;
   refPosts: any;

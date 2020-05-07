@@ -2,7 +2,15 @@ import React, { Component } from 'react';
 import PreviewModal from './PreviewModal';
 import firebase from '../../../config/firebaseService';
 
-class Posts extends Component<any, any> {
+type PostsProps = {}
+
+type PropsState = {
+  show: boolean;
+  posts: any;
+  imgData: any;
+}
+
+class Posts extends Component<PostsProps, PropsState> {
   _isMounted: boolean;
   ref: any;
   unsubscribe: null;

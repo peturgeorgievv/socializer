@@ -2,8 +2,21 @@ import React, { Component } from 'react';
 import { register } from '../store/actions/firebaseAuth'
 import { connect } from "react-redux"
 import firebase from '../config/firebaseService';
+import { toastr } from 'react-redux-toastr';
 
-class SignUp extends Component<any, any> {
+type SignUpProps = {
+  history: any;
+  register: any;
+}
+
+type SignUpState = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+}
+
+class SignUp extends Component<SignUpProps, SignUpState> {
   ref: any;
 
   constructor(props: any) {
@@ -20,7 +33,7 @@ class SignUp extends Component<any, any> {
   handleChange = (event: any): void => {
     this.setState({
       [event.target.id]: event.target.value,
-    })
+    } as any)
   }
 
   handleSubmit = (event: any): void => {
@@ -44,11 +57,11 @@ class SignUp extends Component<any, any> {
               documentId: document.id
             }, { merge: true })
         })
-        console.log("Registration successful");
+        toastr.info('Registration successful', '');
         this.props.history.push('/');
       })
       .catch((error: any) => {
-        console.log(error)
+        toastr.error('Something went wrong.', '');
       })
   }
   

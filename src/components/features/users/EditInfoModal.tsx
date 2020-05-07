@@ -1,7 +1,23 @@
 import React, { Component } from 'react';
 import firebase from '../../../config/firebaseService';
+import { UserData } from '../../../models/users/UserData';
 
-class EditInfoModal extends Component<any, any> {
+type EditInfoModalProps = {
+  userData: UserData;
+  handleClose: any;
+  show: boolean;
+}
+
+type EditInfoModalState = {
+  image: any;
+  localImage: any;
+  url: string;
+  description: string;
+  firstName: string;
+  lastName: string;
+}
+
+class EditInfoModal extends Component<EditInfoModalProps, EditInfoModalState> {
   state: any = {
     image: null,
     localImage: null,
@@ -19,7 +35,7 @@ class EditInfoModal extends Component<any, any> {
       const { name, value } = event.target
       this.setState({
         [name]: value,
-      });
+      } as any);
     }
   }
 

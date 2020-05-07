@@ -3,7 +3,17 @@ import { login } from '../store/actions/firebaseAuth'
 import { connect } from "react-redux"
 import { toastr } from 'react-redux-toastr';
 
-class SignIn extends Component<any, any> {
+type SignInProps = {
+  history: any;
+  login: any;
+}
+
+type SignInState = {
+  email: string;
+  password: string;
+}
+
+class SignIn extends Component<SignInProps, SignInState> {
   constructor(props: any) {
     super(props);
 
@@ -16,7 +26,7 @@ class SignIn extends Component<any, any> {
   handleChange = (event: any): void => {
     this.setState({
       [event.target.id]: event.target.value,
-    })
+    } as any)
   }
 
   handleSubmit = (event: any): void => {
@@ -27,7 +37,7 @@ class SignIn extends Component<any, any> {
         this.props.history.push('/');
       })
       .catch((error: any) => {
-        console.log(error)
+        toastr.error('Something went wrong.', '');
       })
   }
 

@@ -35,8 +35,7 @@ class Header extends Component<HeaderProps, HeaderState> {
     event.preventDefault();
     this.refUsers = null;
     this.props.logout();
-    window.location.href = '/posts'
-    console.log('Logged out');
+    window.location.href = '/posts';
   }
 
   componentDidMount = () => {
@@ -84,7 +83,6 @@ class Header extends Component<HeaderProps, HeaderState> {
   }
 
   onBlur = () => {
-    // TO THINK OF ANOTHER WAY
     setTimeout(() => {
       this.setState({
         name: '',

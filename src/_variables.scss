@@ -1,20 +1,27 @@
+// Colors
 $color-navbar-primary: #98D1FA;
 $color-navbar-hover: #659CEF;
 $color-navbar-fonts: #FFFFFF;
 $color-sign-buttons-hover: #0e1a1b;
 $color-background-primary: #F2FEFE;
 $color-background-secondary: #e3ecee;
+$color-search-background: #242628;
+$color-icon: #98D1FA;
+
+// Fonts
 $font-semi-bold: 400;
 $font-bold: 700;
 $font-size-heading: 24px;
 $font-size-buttons: 20px;
 $font-size-body: 18px;
-$color-search-background: #242628;
-$color-icon: #98D1FA;
-$transition: all .5s ease;
+
+// Media screen size
 $media-screen-sixth: 320px;
 $media-screen-fifth: 400px;
 $media-screen-fourth: 600px;
 $media-screen-third: 800px;
 $media-screen-second: 1000px;
 $media-screen-first: 1300px;
+
+// Animations
+$transition: all .5s ease;
