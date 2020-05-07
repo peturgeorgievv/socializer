@@ -14,7 +14,7 @@ type SignInState = {
 }
 
 class SignIn extends Component<SignInProps, SignInState> {
-  constructor(props: any) {
+  constructor(props: SignInProps) {
     super(props);
 
     this.state = {

@@ -1,6 +1,7 @@
 import { auth } from '../../config/authService';
 import firebase from '../../config/firebaseService';
 import { LOGIN_SUCCESS, REGISTER_SUCCESS, FETCH_USER, LOGOUT } from './types';
+import { COLLECTION } from '../../constants/firebase-collections.constants';
 
 export const loginSuccess = (): any => {
   return {
@@ -16,7 +17,7 @@ export const registerSuccess = (): any => {
   }
 }
 
-export const register = (email: any, password: any) => async (dispatch: (arg0: { type: string; currentUser: any; }) => any) => {
+export const register = (email: string, password: string) => async (dispatch: (arg0: { type: string; currentUser: any; }) => any) => {
   try {
     await auth.createUserWithEmailAndPassword(email, password)
     return dispatch(registerSuccess())
@@ -53,7 +54,7 @@ export const fetchUser = () => async (dispatch: (arg0: { type: string; currentUs
         localStorage.setItem("isAuthenticated", true);
         firebase
           .firestore()
-          .collection('users')
+          .collection(COLLECTION.users)
           .where('uid', '==', currentUser.uid)
           .onSnapshot((querySnapshot: any) => {
             querySnapshot.forEach((element: { data: () => {}; }) => {

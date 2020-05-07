@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { toastr } from 'react-redux-toastr';
 import firebase from '../../../config/firebaseService';
+import { POST_TYPE } from '../../../constants/post-type.constants';
+import { COLLECTION } from '../../../constants/firebase-collections.constants';
 
-// To fix issues with event strict typing
 type CreatePostState = {
-  image: string | null;
+  name: string;
+  image: any;
   title: string;
+  localImage: any;
   description: string;
   url: string;
   status: string;
@@ -16,16 +19,17 @@ type CreatePostProps = {
   currentUser: any;
 }
 
-class CreatePost extends Component<CreatePostProps, any> {
-  constructor(props: any) {
+class CreatePost extends Component<CreatePostProps, CreatePostState> {
+  constructor(props: CreatePostProps) {
     super(props);
     this.state = {
+      name: '',
       image: null,
       localImage: null,
       title: '',
       description: '',
       url: '',
-      status: 'public',
+      status: POST_TYPE.public,
     };
   }
 
@@ -44,7 +48,7 @@ class CreatePost extends Component<CreatePostProps, any> {
       const { name, value } = event.target
       this.setState({
         [name]: value,
-      });
+      } as any);
     }
   };
 
@@ -72,7 +76,7 @@ class CreatePost extends Component<CreatePostProps, any> {
           .child(image.name)
           .getDownloadURL()
           .then((url: any) => {
-            firebase.firestore().collection('posts').add({
+            firebase.firestore().collection(COLLECTION.posts).add({
               imgUrl: url,
               status: this.state.status,
               dateCreated: new Date().toLocaleString(),
@@ -80,7 +84,7 @@ class CreatePost extends Component<CreatePostProps, any> {
               title: this.state.title,
               description: this.state.description,
             }).then((postData: any) => {
-              firebase.firestore().collection('posts').doc(postData.id).set({ postId: postData.id }, { merge: true });
+              firebase.firestore().collection(COLLECTION.posts).doc(postData.id).set({ postId: postData.id }, { merge: true });
             });
             toastr.info('Created post with title', this.state.title);
             this.setState({
@@ -141,7 +145,7 @@ class CreatePost extends Component<CreatePostProps, any> {
                 <label htmlFor="public">
                   <input
                     name="status"
-                    checked={this.state.status === 'public'}
+                    checked={this.state.status === POST_TYPE.public}
                     onChange={this.handleChange}
                     type="radio"
                     value="public"
@@ -152,7 +156,7 @@ class CreatePost extends Component<CreatePostProps, any> {
                   <input
                     name="status"
                     type="radio"
-                    checked={this.state.status === 'private'}
+                    checked={this.state.status === POST_TYPE.private}
                     onChange={this.handleChange}
                     value="private" />
                   Private

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import firebase from '../../../config/firebaseService';
 import { UserData } from '../../../models/users/UserData';
+import { COLLECTION } from '../../../constants/firebase-collections.constants';
 
 type EditInfoModalProps = {
   userData: UserData;
@@ -57,7 +58,7 @@ class EditInfoModal extends Component<EditInfoModalProps, EditInfoModalState> {
           .getDownloadURL()
           .then((url: any) => {
             console.log(url);
-            firebase.firestore().collection('users').doc(this.props.userData.documentId).set({
+            firebase.firestore().collection(COLLECTION.users).doc(this.props.userData.documentId).set({
               profilePhotoUrl: url,
               firstName: this.state.firstName,
               lastName: this.state.lastName,
@@ -75,7 +76,7 @@ class EditInfoModal extends Component<EditInfoModalProps, EditInfoModalState> {
     if (this.state.image) {
       this.handleUpload();
     } else {
-      firebase.firestore().collection('users').doc(this.props.userData.documentId).set({
+      firebase.firestore().collection(COLLECTION.users).doc(this.props.userData.documentId).set({
         firstName: this.state.firstName,
         lastName: this.state.lastName,
         description: this.state.description,

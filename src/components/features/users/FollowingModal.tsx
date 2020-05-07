@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import firebase from '../../../config/firebaseService';
 import { UserData } from '../../../models/users/UserData';
+import { COLLECTION } from '../../../constants/firebase-collections.constants';
 
 type FollowingModalProps = {
   userData: UserData;
@@ -36,7 +37,7 @@ class FollowingModal extends Component<FollowingModalProps, FollowingModalState>
 
   getUserData = () => {
     firebase.firestore()
-      .collection('users')
+      .collection(COLLECTION.users)
       .onSnapshot(snapshot => {
         if (this._isMounted) {
           this.setState({ filteredUsers: [] });

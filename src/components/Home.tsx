@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import PreviewModal from './features/posts/PreviewModal';
 import firebase from '../config/firebaseService';
 import { ImgData } from '../models/posts/ImgData';
+import { COLLECTION } from '../constants/firebase-collections.constants';
+import { POST_TYPE } from '../constants/post-type.constants';
 
 type HomeProps = {
   currentUser: any;
@@ -24,7 +26,7 @@ class Home extends Component<HomeProps, HomeState> {
     this._isMounted = true;
     this.ref = firebase
       .firestore()
-      .collection('posts');
+      .collection(COLLECTION.posts);
     this.unsubscribe = null;
     this.state = {
       show: false,
@@ -43,7 +45,7 @@ class Home extends Component<HomeProps, HomeState> {
     if (this.props.currentUser) {
       this.ref = firebase
         .firestore()
-        .collection('posts')
+        .collection(COLLECTION.posts)
         .onSnapshot(this.onCollectionUpdate);
     }
   }
@@ -79,9 +81,9 @@ class Home extends Component<HomeProps, HomeState> {
           dateCreated
         } = img.data();
         if (
-          status === 'public' ||
+          status === POST_TYPE.public ||
           uploadedBy === this.props.currentUser.documentId ||
-          (status === 'private' &&
+          (status === POST_TYPE.private &&
           this.props.currentUser &&
           this.props.currentUser.following &&
           this.props.currentUser.following.find((follower: any) => follower.userDocumentId === uploadedBy))

@@ -5,8 +5,8 @@ import firebase from '../../../config/firebaseService';
 import { CommentData } from '../../../models/posts/CommentData';
 import { UserData } from '../../../models/users/UserData';
 import { Link } from 'react-router-dom';
+import { COLLECTION } from '../../../constants/firebase-collections.constants';
 
-// To fix issues with event strict typing
 type SingleCommentState = {
   description: string;
   showForm: boolean;
@@ -42,7 +42,7 @@ class SingleComment extends Component<SingleCommentProps, SingleCommentState> {
     if (!this.props.currentUser) return;
     firebase
       .firestore()
-      .collection('comments')
+      .collection(COLLECTION.comments)
       .doc(this.props.commentData.commentId)
       .set({
         description: this.state.description
@@ -64,7 +64,7 @@ class SingleComment extends Component<SingleCommentProps, SingleCommentState> {
   handleDeleteComment = (commentId: string) => {
     firebase
       .firestore()
-      .collection('comments')
+      .collection(COLLECTION.comments)
       .doc(commentId)
       .delete();
       toastr.info('Deleted comment', '');

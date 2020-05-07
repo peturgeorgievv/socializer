@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import firebase from '../../config/firebaseService';
 import { logout } from '../../store/actions/firebaseAuth';
 import { getAuthenticationStatus } from '../../config/authService';
+import { COLLECTION } from '../../constants/firebase-collections.constants';
 
 type HeaderProps = {
   currentUser: any;
@@ -41,7 +42,7 @@ class Header extends Component<HeaderProps, HeaderState> {
   componentDidMount = () => {
     this.refUsers = firebase
       .firestore()
-      .collection('users')
+      .collection(COLLECTION.users)
   }
 
   componentWillUnmount = () => {
@@ -121,7 +122,7 @@ class Header extends Component<HeaderProps, HeaderState> {
         </div>
         {this.state.users.length > 0 && this.state.focused && (
           <ul className="search-results-list">
-            {this.state.users.map((username: any, index: any) => {
+            {this.state.users.map((username: any, index: number) => {
               return (
                 <li key={index}>
                   <Link

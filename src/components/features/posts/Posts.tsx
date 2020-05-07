@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PreviewModal from './PreviewModal';
 import firebase from '../../../config/firebaseService';
+import { POST_TYPE } from '../../../constants/post-type.constants';
+import { COLLECTION } from '../../../constants/firebase-collections.constants';
 
 type PostsProps = {}
 
@@ -14,14 +16,14 @@ class Posts extends Component<PostsProps, PropsState> {
   _isMounted: boolean;
   ref: any;
   unsubscribe: null;
-  constructor(props: any) {
+  constructor(props: PostsProps) {
     super(props);
     this._isMounted = true;
 
     this.ref = firebase
       .firestore()
-      .collection('posts')
-      .where('status', '==', 'public');
+      .collection(COLLECTION.posts)
+      .where('status', '==', POST_TYPE.public);
     this.unsubscribe = null;
     this.state = {
       show: false,

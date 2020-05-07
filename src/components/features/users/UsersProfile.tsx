@@ -5,6 +5,8 @@ import PreviewModal from '../posts/PreviewModal';
 import FollowersModal from './FollowersModal';
 import FollowingModal from './FollowingModal';
 import EditInfoModal from './EditInfoModal';
+import { POST_TYPE } from '../../../constants/post-type.constants';
+import { COLLECTION } from '../../../constants/firebase-collections.constants';
 
 type UsersProfileProps = {
   currentUser: any;
@@ -31,7 +33,7 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
   userRef: any;
 
 
-  constructor(props: any) {
+  constructor(props: UsersProfileProps) {
     super(props);
     this._isMounted = true;
 
@@ -49,11 +51,11 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
   componentDidMount = () => {
     this.refUserData = firebase
       .firestore()
-      .collection('users')
+      .collection(COLLECTION.users)
       .doc(this.props.match.params.id);
     this.refPosts = firebase
       .firestore()
-      .collection('posts')
+      .collection(COLLECTION.posts)
 
     this.refUserData = this.refUserData.onSnapshot(this.onCollectionUpdate)
   }
@@ -132,11 +134,11 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
     this.updateUserBatch = firebase.firestore().batch();
     this.docRefShowedUser = firebase
       .firestore()
-      .collection('users')
+      .collection(COLLECTION.users)
       .doc(this.props.currentUser.documentId);
     this.docRefCurrentUser = firebase
       .firestore()
-      .collection('users')
+      .collection(COLLECTION.users)
       .doc(this.props.match.params.id);
 
     this.updateUserBatch.update(this.docRefShowedUser, {
@@ -160,11 +162,11 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
     this.updateUserBatch = firebase.firestore().batch();
     this.docRefShowedUser = firebase
       .firestore()
-      .collection('users')
+      .collection(COLLECTION.users)
       .doc(this.props.currentUser.documentId);
     this.docRefCurrentUser = firebase
       .firestore()
-      .collection('users')
+      .collection(COLLECTION.users)
       .doc(this.props.match.params.id);
 
     this.updateUserBatch.update(this.docRefShowedUser, {
@@ -203,9 +205,9 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
           } = post.data();
 
           if (
-            status === 'public' ||
+            status === POST_TYPE.public ||
             this.props.currentUser.documentId === userData.documentId ||
-            (status === 'private' &&
+            (status === POST_TYPE.private &&
               this.props.currentUser &&
               this.props.currentUser.following &&
               this.props.currentUser.following.find((follower: { userDocumentId: any; }) => follower.userDocumentId === uploadedBy))

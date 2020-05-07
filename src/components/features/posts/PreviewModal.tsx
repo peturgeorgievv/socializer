@@ -7,6 +7,7 @@ import { ImgData } from '../../../models/posts/ImgData';
 import { UserData } from '../../../models/users/UserData';
 import { toastr } from 'react-redux-toastr';
 import SingleComment from './SingleComment';
+import { COLLECTION } from '../../../constants/firebase-collections.constants';
 
 type PreviewModalProps = {
   show: boolean;
@@ -49,7 +50,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
     if (prevProps === this.props) return;
     if (this.props.imgData.uploadedBy) {
       firebase.firestore()
-        .collection('users')
+        .collection(COLLECTION.users)
         .doc(this.props.imgData.uploadedBy)
         .get()
         .then((userSnapshot: any) => {
@@ -60,7 +61,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
     }
 
     if (this.props.imgData.postId) {
-      firebase.firestore().collection('comments')
+      firebase.firestore().collection(COLLECTION.comments)
         .where('postId', '==', this.props.imgData.postId)
         .onSnapshot((querySnapshot: any) => {
           if (this._isMounted) {
@@ -74,7 +75,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
               }));
             }
 
-            firebase.firestore().collection('users').doc(this.state.commentData[counter].userId)
+            firebase.firestore().collection(COLLECTION.users).doc(this.state.commentData[counter].userId)
               .onSnapshot((querySnapshot: any) => {
                 if (this._isMounted) {
                   this.setState((prevState: PreviewModalState) => ({
@@ -85,7 +86,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
             counter++;
           })
         })
-      firebase.firestore().collection('likes')
+      firebase.firestore().collection(COLLECTION.likes)
         .where('postId', '==', this.props.imgData.postId)
         .onSnapshot((querySnapshot: any) => {
           if (this._isMounted) {
@@ -109,13 +110,13 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
     if (event.target.id === 'like-button') {
     this.refLikes = firebase
       .firestore()
-      .collection('likes')
+      .collection(COLLECTION.likes)
       .add({
         postId: this.props.imgData.postId,
         userId: this.props.currentUser.documentId
       }).then((likeData: any) => {
         firebase.firestore()
-          .collection('likes')
+          .collection(COLLECTION.likes)
           .doc(likeData.id)
           .set({ likeId: likeData.id }, { merge: true });
         toastr.info('Liked', this.props.imgData.title);
@@ -125,7 +126,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
       console.log(likeData);
       this.refLikes = firebase
       .firestore()
-      .collection('likes')
+      .collection(COLLECTION.likes)
       .doc(likeData.likeId)
       .delete();
       toastr.info('Unliked', this.props.imgData.title);
@@ -141,7 +142,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
     
     this.refComments = firebase
       .firestore()
-      .collection('comments')
+      .collection(COLLECTION.comments)
       .add({
         postId: this.props.imgData.postId,
         description: this.state.commentText,
@@ -149,7 +150,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
         userId: this.props.currentUser.documentId
       }).then((commentData: any) => {
         firebase.firestore()
-          .collection('comments')
+          .collection(COLLECTION.comments)
           .doc(commentData.id)
           .set({ commentId: commentData.id }, { merge: true });
           if (this._isMounted) {
@@ -163,7 +164,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
     // Deletes all comments from the post
     firebase
     .firestore()
-    .collection('comments')
+    .collection(COLLECTION.comments)
     .where('postId', '==', this.props.imgData.postId)
     .get().then(data => {
       data.forEach(querySnapshot => {
@@ -174,7 +175,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
     // Deletes all likes to the post
     firebase
     .firestore()
-    .collection('likes')
+    .collection(COLLECTION.likes)
     .where('postId', '==', this.props.imgData.postId)
     .get().then(data => {
       data.forEach(querySnapshot => {
@@ -183,7 +184,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
     });
 
     // Deletes image from posts collection
-    firebase.firestore().collection('posts').doc(this.props.imgData.postId).delete();
+    firebase.firestore().collection(COLLECTION.posts).doc(this.props.imgData.postId).delete();
 
     // Deletes image from storage
     firebase.storage().refFromURL(this.props.imgData.imgUrl).delete().then(() => {

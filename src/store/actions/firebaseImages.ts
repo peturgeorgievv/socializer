@@ -1,6 +1,7 @@
 import { auth } from '../../config/authService';
 import firebase from '../../config/firebaseService';
 import { GET_USER_POSTS } from './types';
+import { COLLECTION } from '../../constants/firebase-collections.constants';
 
 export const getUserPosts = () => async (dispatch: any) => {
   try {
@@ -8,7 +9,7 @@ export const getUserPosts = () => async (dispatch: any) => {
       if (currentUser) {
         let imgData: { key: any; imgUrl: any; status: any; uploadedBy: any; }[] = [];
         firebase.firestore()
-          .collection('posts')
+          .collection(COLLECTION.posts)
           .where('uploadedBy', '==', currentUser.uid)
           .onSnapshot((querySnapshot: any) => {
             imgData = [];

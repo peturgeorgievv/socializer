@@ -3,6 +3,7 @@ import { register } from '../store/actions/firebaseAuth'
 import { connect } from "react-redux"
 import firebase from '../config/firebaseService';
 import { toastr } from 'react-redux-toastr';
+import { COLLECTION } from '../constants/firebase-collections.constants';
 
 type SignUpProps = {
   history: any;
@@ -19,9 +20,9 @@ type SignUpState = {
 class SignUp extends Component<SignUpProps, SignUpState> {
   ref: any;
 
-  constructor(props: any) {
+  constructor(props: SignUpProps) {
     super(props);
-    this.ref = firebase.firestore().collection('users');
+    this.ref = firebase.firestore().collection(COLLECTION.users);
     this.state = {
       email: '',
       password: '',
@@ -51,7 +52,7 @@ class SignUp extends Component<SignUpProps, SignUpState> {
         }).then((document: any) => {
           firebase
             .firestore()
-            .collection('users')
+            .collection(COLLECTION.users)
             .doc(document.id)
             .set({ 
               documentId: document.id
