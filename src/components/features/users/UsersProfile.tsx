@@ -318,7 +318,7 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
             </div>
             <div className="posts-container">
               {this.state.posts.length > 0 &&
-                this.state.posts.map((data: { imgUrl: string | undefined; }, index: string | number | undefined) => {
+                this.state.posts.map((data: { imgUrl: string | undefined; }, index: number) => {
                   return (
                     <div className="posts-container-img" key={index} onClick={() => this.showModal(data)}>
                       <img src={data.imgUrl} alt="img" />

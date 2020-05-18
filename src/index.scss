@@ -13,6 +13,11 @@
 @import './styles/features/FollowingModal.scss';
 @import 'react-redux-toastr/src/styles/index';
 
+.app-container {
+  margin: 0 auto;
+  max-width: 1920px;
+}
+
 .posts-container { 
   position: relative;
   display: flex;

@@ -32,7 +32,7 @@ class App extends Component<AppProps, AppState> {
 
   render = () => {
     return (
-      <div>
+      <div className="app-container">
         <BrowserRouter>
           <Header />
           <main>
