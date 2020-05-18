@@ -8,6 +8,7 @@ import { UserData } from '../../../models/users/UserData';
 import { toastr } from 'react-redux-toastr';
 import SingleComment from './SingleComment';
 import { COLLECTION } from '../../../constants/firebase-collections.constants';
+import moment from 'moment';
 
 type PreviewModalProps = {
   show: boolean;
@@ -73,16 +74,14 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
               this.setState((prevState: PreviewModalState) => ({
                   commentData: [...prevState.commentData, comment.data()],
               }));
-            }
 
-            firebase.firestore().collection(COLLECTION.users).doc(this.state.commentData[counter].userId)
-              .onSnapshot((querySnapshot: any) => {
-                if (this._isMounted) {
+              firebase.firestore().collection(COLLECTION.users).doc(this.state.commentData[counter].userId)
+                .onSnapshot((querySnapshot: any) => {
                   this.setState((prevState: PreviewModalState) => ({
                     commentedUserData: [...prevState.commentedUserData, querySnapshot.data()],
                   }))
-                }
-              })
+                })
+              }
             counter++;
           })
         })
@@ -146,7 +145,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
       .add({
         postId: this.props.imgData.postId,
         description: this.state.commentText,
-        createdOn: new Date().toLocaleString(),
+        createdOn: moment().format('DD/MM/YYYY HH:mm'),
         userId: this.props.currentUser.documentId
       }).then((commentData: any) => {
         firebase.firestore()
@@ -243,7 +242,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
                     <strong>{`${this.state.postUserData.firstName} ${this.state.postUserData.lastName}`}</strong>
                   </span>
                 </Link>
-                <span className="title-date">{this.props.imgData.dateCreated}</span>
+                <span className="title-date">{moment(this.props.imgData.dateCreated).format('DD/MM/YYYY HH:mm')}</span>
                 <div className="img-title">{this.props.imgData.title}</div>
                 <div className="img-description">{this.props.imgData.description}</div>
                 <form className="comment-form" onSubmit={this.handleComment}>
@@ -261,7 +260,14 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
             <div className="all-comments">
               { this.state.commentData.length > 0 &&
                 this.state.commentData
-                  .sort((a: CommentData, b: CommentData) => (new Date(b.createdOn) as any) - (new Date(a.createdOn) as any))
+                  .sort((a: CommentData, b: CommentData) => { 
+                    if ((moment(a.createdOn, 'DD/MM/YYYY HH:mm').valueOf() > (moment(b.createdOn, 'DD/MM/YYYY HH:mm').valueOf()))) {
+                      return -1;
+                    } else if ((moment(a.createdOn, 'DD/MM/YYYY HH:mm').valueOf() < (moment(b.createdOn, 'DD/MM/YYYY HH:mm').valueOf()))) {
+                      return 1;
+                    }
+                    return 0;
+                  })
                   .map((commentData: CommentData, index: number) => {
                 const userData = this.state.commentedUserData.find((userData) => userData.documentId === commentData.userId);
                 return (
