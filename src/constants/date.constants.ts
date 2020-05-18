@@ -1,0 +1,1 @@
+export const DATE_COMMENTS_FORMAT = 'DD/MM/YYYY HH:mm';

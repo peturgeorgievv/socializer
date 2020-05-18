@@ -9,6 +9,9 @@ import { toastr } from 'react-redux-toastr';
 import SingleComment from './SingleComment';
 import { COLLECTION } from '../../../constants/firebase-collections.constants';
 import moment from 'moment';
+import { DATE_COMMENTS_FORMAT } from '../../../constants/date.constants';
+import { compareDates } from '../../../utils/date-utils';
+import { DATE_ORDER } from '../../../enums/date.enum';
 
 type PreviewModalProps = {
   show: boolean;
@@ -145,7 +148,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
       .add({
         postId: this.props.imgData.postId,
         description: this.state.commentText,
-        createdOn: moment().format('DD/MM/YYYY HH:mm'),
+        createdOn: moment().format(DATE_COMMENTS_FORMAT),
         userId: this.props.currentUser.documentId
       }).then((commentData: any) => {
         firebase.firestore()
@@ -242,7 +245,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
                     <strong>{`${this.state.postUserData.firstName} ${this.state.postUserData.lastName}`}</strong>
                   </span>
                 </Link>
-                <span className="title-date">{moment(this.props.imgData.dateCreated).format('DD/MM/YYYY HH:mm')}</span>
+                <span className="title-date">{moment(this.props.imgData.dateCreated).format(DATE_COMMENTS_FORMAT)}</span>
                 <div className="img-title">{this.props.imgData.title}</div>
                 <div className="img-description">{this.props.imgData.description}</div>
                 <form className="comment-form" onSubmit={this.handleComment}>
@@ -261,12 +264,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
               { this.state.commentData.length > 0 &&
                 this.state.commentData
                   .sort((a: CommentData, b: CommentData) => { 
-                    if ((moment(a.createdOn, 'DD/MM/YYYY HH:mm').valueOf() > (moment(b.createdOn, 'DD/MM/YYYY HH:mm').valueOf()))) {
-                      return -1;
-                    } else if ((moment(a.createdOn, 'DD/MM/YYYY HH:mm').valueOf() < (moment(b.createdOn, 'DD/MM/YYYY HH:mm').valueOf()))) {
-                      return 1;
-                    }
-                    return 0;
+                    return compareDates(a.createdOn, b.createdOn, DATE_ORDER.asc);
                   })
                   .map((commentData: CommentData, index: number) => {
                 const userData = this.state.commentedUserData.find((userData) => userData.documentId === commentData.userId);
