@@ -34,60 +34,61 @@
   margin: 2px;
   cursor: pointer;
   transition: transform .2s;
-}
 
-@media screen and (max-width: $media-screen-fifth) {
-  .posts-container-img {
-    flex: 100%;
-    max-width: 100%;
-    max-height: 100%;
+  @media screen and (max-width: $media-screen-fifth) {
+    & {
+      flex: 100%;
+      max-width: 100%;
+      max-height: 100%;
+    }
   }
-}
-
-@media screen and (min-width: $media-screen-fifth) and (max-width: $media-screen-fourth) {
-  .posts-container-img {
-    flex: 48%;
-    max-width: 48%;
+  
+  @media screen and (min-width: $media-screen-fifth) and (max-width: $media-screen-fourth) {
+    & {
+      flex: 48%;
+      max-width: 48%;
+    }
   }
-}
-
-@media screen and (min-width: $media-screen-fourth) and (max-width: $media-screen-third) {
-  .posts-container-img {
-    flex: 32%;
-    max-width: 32%;
-    max-height: 230px;
+  
+  @media screen and (min-width: $media-screen-fourth) and (max-width: $media-screen-third) {
+    & {
+      flex: 32%;
+      max-width: 32%;
+      max-height: 230px;
+    }
   }
-}
-
-@media screen and (min-width: $media-screen-third) and (max-width: $media-screen-second) {
-  .posts-container-img {
-    flex: 24%;
-    max-width: 24%;
-    max-height: 270px;
+  
+  @media screen and (min-width: $media-screen-third) and (max-width: $media-screen-second) {
+    & {
+      flex: 24%;
+      max-width: 24%;
+      max-height: 270px;
+    }
   }
-}
-
-@media screen and (min-width: $media-screen-second) and (max-width: $media-screen-first) {
-  .posts-container-img {
-    flex: 24%;
-    max-width: 24%;
-    max-height: 270px;
+  
+  @media screen and (min-width: $media-screen-second) and (max-width: $media-screen-first) {
+    & {
+      flex: 24%;
+      max-width: 24%;
+      max-height: 270px;
+    }
   }
-}
-
-.posts-container-img:hover {
-  z-index: 1;
-  transform: scale(1.1);
-
-  .posts-container-img-buttons {
+  
+  &:hover {
     z-index: 1;
+    transform: scale(1.1);
+  
+    .posts-container-img-buttons {
+      z-index: 1;
+    }
+  }
+  
+  & img {
+    width: 100%;
+    height: 100%;
   }
 }
 
-.posts-container-img img {
-  width: 100%;
-  height: 100%;
-}
 
 .heart-icon-unliked {
   display: inline-block;

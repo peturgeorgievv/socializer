@@ -10,6 +10,7 @@ import UsersProfile from './features/users/UsersProfile';
 import CreatePost from './features/posts/CreatePost';
 import { fetchUser } from '../store/actions/firebaseAuth'
 import { getUserPosts } from '../store/actions/firebaseImages';
+import ProtectedRoute from './shared/ProtectedRoute';
 
 type AppProps = any;
 type AppState = {};
@@ -40,7 +41,12 @@ class App extends Component<AppProps, AppState> {
             <Route exact path="/signin" component={SignIn} />
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/posts" component={Posts} />
-            <Route exact path="/posts/create" component={CreatePost} />
+            <ProtectedRoute 
+              path='/posts/create'
+              isAuthenticated={this.props.currentUser}
+              component={CreatePost}
+            />
+            {/* <Route exact path="/posts/create" component={CreatePost} /> */}
             <Route exact path="/users/:id" render={(params) => <UsersProfile {...params} key={params.match.params.id} />} />
           </main>
         </BrowserRouter>
@@ -49,4 +55,8 @@ class App extends Component<AppProps, AppState> {
   }
 }
 
-export default connect(null, { fetchUser, getUserPosts })(App);
+const mapStateToProps = ({ currentUser }: any) => {
+  return { currentUser };
+}
+
+export default connect(mapStateToProps, { fetchUser, getUserPosts })(App);

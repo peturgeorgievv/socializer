@@ -1,6 +1,6 @@
 import { auth } from '../../config/authService';
 import firebase from '../../config/firebaseService';
-import { LOGIN_SUCCESS, REGISTER_SUCCESS, FETCH_USER, LOGOUT } from './types';
+import { LOGIN_SUCCESS, REGISTER_SUCCESS, FETCH_USER, LOGOUT, FETCH_USER_START } from './types';
 import { COLLECTION } from '../../constants/firebase-collections.constants';
 
 export const loginSuccess = (): any => {
@@ -36,7 +36,7 @@ export const login = (email: any, password: any) => async (dispatch: (arg0: { ty
 }
 
 
-export const logout = () => async (dispatch: (arg0: { type: string; currentUser: any; }) => void) => {
+export const logout = () => async (dispatch: any) => {
   try {
     await auth.signOut()
     dispatch({ type: LOGOUT, currentUser: auth.currentUser })
@@ -45,8 +45,12 @@ export const logout = () => async (dispatch: (arg0: { type: string; currentUser:
   }
 }
 
-export const fetchUser = () => async (dispatch: (arg0: { type: string; currentUser: {} | null; }) => void) => {
+export const fetchUser = () => async (dispatch: any) => {
   try {
+    dispatch({
+      type: FETCH_USER_START,
+      isLoading: true,
+    })
     await auth.onAuthStateChanged((currentUser: any) => {
       if (currentUser) {
         let currentUserData: any = {};
@@ -63,6 +67,7 @@ export const fetchUser = () => async (dispatch: (arg0: { type: string; currentUs
             dispatch({
               type: FETCH_USER,
               currentUser: currentUserData,
+              isLoading: false,
             })
           });
       } else {
@@ -70,6 +75,7 @@ export const fetchUser = () => async (dispatch: (arg0: { type: string; currentUs
         dispatch({
           type: FETCH_USER,
           currentUser: null,
+          isLoading: false
         })
       }
     })
