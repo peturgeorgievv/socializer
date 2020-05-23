@@ -49,6 +49,7 @@ export const fetchUser = () => async (dispatch: any) => {
   try {
     dispatch({
       type: FETCH_USER_START,
+      currentUser: null,
       isLoading: true,
     })
     await auth.onAuthStateChanged((currentUser: any) => {
