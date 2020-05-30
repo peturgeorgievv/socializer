@@ -4,7 +4,7 @@ import { Route, Redirect } from "react-router-dom";
 const ProtectedRoute = ({ component, isAuthenticated, ...rest }: any) => {
   console.log(isAuthenticated);
   const routeComponent = (props: any) =>
-    isAuthenticated && isAuthenticated.currentUser ? (
+    isAuthenticated ? (
       React.createElement(component, props)
     ) : (
       <Redirect to={{ pathname: "/signin" }} />

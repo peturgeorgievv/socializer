@@ -60,7 +60,12 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
     this.refUserData = this.refUserData.onSnapshot(this.onCollectionUpdate)
   }
 
-  showModal = (imgData: any) => {
+  componentDidUpdate = () => {
+    if (!this._isMounted) return;
+  }
+
+  showModal = (imgData: any): void => {
+    if (!this._isMounted) return;
     this.setState({
       show: true,
       imgData
@@ -68,6 +73,7 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
   };
 
   showFollowersModal = (userData: any) => {
+    if (!this._isMounted) return;
     this.setState({
       showFollowers: true,
       userData
@@ -75,6 +81,7 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
   }
 
   showFollowingModal = (userData: any) => {
+    if (!this._isMounted) return;
     this.setState({
       showFollowing: true,
       userData
@@ -82,6 +89,7 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
   }
 
   showEditInfoModal = (userData: any) => {
+    if (!this._isMounted) return;
     this.setState({
       showEditInfo: true,
       userData
@@ -89,18 +97,22 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
   }
 
   hideModal = () => {
+    if (!this._isMounted) return;
     this.setState({ show: false });
   };
 
   hideFollowersModal = () => {
+    if (!this._isMounted) return;
     this.setState({ showFollowers: false });
   }
 
   hideFollowingModal = () => {
+    if (!this._isMounted) return;
     this.setState({ showFollowing: false });
   }
 
   hideEditInfoModal = () => {
+    if (!this._isMounted) return;
     this.setState({ showEditInfo: false })
   }
 
@@ -189,7 +201,7 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
   onCollectionUpdate = (querySnapshot: any) => {
     let userData = querySnapshot.data();
     let posts: any = [];
-    this.refPosts && this.refPosts
+    userData && this.refPosts && this.refPosts
       .where('uploadedBy', '==', userData.documentId)
       .onSnapshot((photosQuerySnapshot: any[]) => {
         posts = [];
@@ -237,6 +249,9 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
     this.refUserData = null;
     this.refPosts = null;
     this.userRef = null;
+    this.updateUserBatch = null;
+    this.docRefShowedUser = null;
+    this.docRefCurrentUser = null;
   }
 
   render = () => {

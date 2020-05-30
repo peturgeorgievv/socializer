@@ -34,6 +34,9 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
   _isMounted: boolean;
   refLikes: any;
   refComments: any;
+  commentsByIdRef: any;
+  likesByIdRef: any;
+  usersRef: any;
 
   constructor(props: PreviewModalProps) {
     super(props);
@@ -65,7 +68,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
     }
 
     if (this.props.imgData.postId) {
-      firebase.firestore().collection(COLLECTION.comments)
+      this.commentsByIdRef = firebase.firestore().collection(COLLECTION.comments)
         .where('postId', '==', this.props.imgData.postId)
         .onSnapshot((querySnapshot: any) => {
           if (this._isMounted) {
@@ -78,7 +81,7 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
                   commentData: [...prevState.commentData, comment.data()],
               }));
 
-              firebase.firestore().collection(COLLECTION.users).doc(this.state.commentData[counter].userId)
+              this.usersRef = firebase.firestore().collection(COLLECTION.users).doc(this.state.commentData[counter].userId)
                 .onSnapshot((querySnapshot: any) => {
                   this.setState((prevState: PreviewModalState) => ({
                     commentedUserData: [...prevState.commentedUserData, querySnapshot.data()],
@@ -88,16 +91,18 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
             counter++;
           })
         })
-      firebase.firestore().collection(COLLECTION.likes)
+      this.likesByIdRef = firebase.firestore().collection(COLLECTION.likes)
         .where('postId', '==', this.props.imgData.postId)
         .onSnapshot((querySnapshot: any) => {
           if (this._isMounted) {
             this.setState({ likesData: [] });
           }
           querySnapshot.forEach((like: any) => {
-            this.setState((prevState: PreviewModalState) => ({
-              likesData: [...prevState.likesData, like.data()],
-            }));
+            if (this._isMounted) {
+              this.setState((prevState: PreviewModalState) => ({
+                likesData: [...prevState.likesData, like.data()],
+              }));
+            }
           })
         })
     }
@@ -105,6 +110,11 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
 
   componentWillUnmount = () => {
     this._isMounted = false;
+    this.refLikes = null;
+    this.refComments = null;
+    this.commentsByIdRef = null;
+    this.likesByIdRef = null;
+    this.usersRef = null;
   }
 
   handleLikeDislike = (event: any) => {
@@ -125,7 +135,6 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
       });
     } else {
       const likeData = this.state.likesData.find(like => like.userId === this.props.currentUser.documentId);
-      console.log(likeData);
       this.refLikes = firebase
       .firestore()
       .collection(COLLECTION.likes)
@@ -195,10 +204,12 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
     });
   }
 
-  handleChange = (event: any) => {
-    this.setState({
-      commentText: event.target.value
-    });
+  handleChange = (event: any): void => {
+    if (this._isMounted) {
+      this.setState({
+        commentText: event.target.value
+      });
+    }
   }
   
   render = () => {

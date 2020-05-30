@@ -17,6 +17,7 @@ type FollowingModalState = {
 
 class FollowingModal extends Component<FollowingModalProps, FollowingModalState> {
   _isMounted: boolean;
+  usersRef: any;
 
   constructor(props: FollowingModalProps) {
     super(props);
@@ -33,10 +34,11 @@ class FollowingModal extends Component<FollowingModalProps, FollowingModalState>
 
   componentWillUnmount = () => {
     this._isMounted = false;
+    this.usersRef = null;
   }
 
   getUserData = () => {
-    firebase.firestore()
+    this.usersRef = firebase.firestore()
       .collection(COLLECTION.users)
       .onSnapshot(snapshot => {
         if (this._isMounted) {

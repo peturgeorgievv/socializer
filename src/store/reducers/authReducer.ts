@@ -7,17 +7,9 @@ const authReducer = (state = {}, action: any) => {
     case LOGIN_SUCCESS:
     case LOGOUT:
     case FETCH_USER:
-      return {
-        ...state,
-        currentUser: action.currentUser,
-        isLoading: false,
-      }
+      return action.currentUser
     case FETCH_USER_START:
-      return {
-        ...state,
-        currentUser: action.currentUser,
-        isLoading: true,
-      }
+      return action.currentUser
     default:
       return state
   }
