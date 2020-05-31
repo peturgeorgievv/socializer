@@ -15,6 +15,7 @@ import ProtectedRoute from "./shared/ProtectedRoute";
 type AppProps = any;
 type AppState = {};
 
+  // FIX BUG WITH COMMENTING --------------
 class App extends Component<AppProps, AppState> {
   refUser: any;
   refPhotos: any;
@@ -30,14 +31,13 @@ class App extends Component<AppProps, AppState> {
     this.refPhotos = null;
     this.refUserFromParams = null;
   };
-
   render = () => {
     return (
       <div className="app-container">
         <BrowserRouter>
           <Header />
           <main>
-            <Route exact path="/" component={Home} />
+            <Route exact path="/" component={this.props.currentUser ? Home : Posts} />
             <Route exact path="/signin" component={SignIn} />
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/posts" component={Posts} />

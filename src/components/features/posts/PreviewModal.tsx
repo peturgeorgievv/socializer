@@ -22,7 +22,6 @@ type PreviewModalProps = {
 
 type PreviewModalState = {
   commentText: string;
-  imgData: ImgData;
   postUserData: UserData | null;
   commentData: CommentData[];
   commentedUserData: any[];
@@ -44,7 +43,6 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
     
     this.state = {
       commentText: '',
-      imgData: this.props.imgData,
       postUserData: null,
       commentData: [],
       commentedUserData: [],
@@ -53,17 +51,16 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
     }
   }
 
-  componentDidUpdate = async (prevProps: PreviewModalProps, prevState: PreviewModalState) => {
-    if (prevProps === this.props) return;
+  updateFirebaseData = () => {
     if (this.props.imgData.uploadedBy) {
       firebase.firestore()
-        .collection(COLLECTION.users)
-        .doc(this.props.imgData.uploadedBy)
-        .get()
-        .then((userSnapshot: any) => {
-          if (this._isMounted) {
-            this.setState({ postUserData: userSnapshot.data() });
-          }
+      .collection(COLLECTION.users)
+      .doc(this.props.imgData.uploadedBy)
+      .get()
+      .then((userSnapshot: any) => {
+        if (this._isMounted) {
+          this.setState({ postUserData: userSnapshot.data() });
+        }
       })
     }
 
@@ -83,9 +80,11 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
 
               this.usersRef = firebase.firestore().collection(COLLECTION.users).doc(this.state.commentData[counter].userId)
                 .onSnapshot((querySnapshot: any) => {
-                  this.setState((prevState: PreviewModalState) => ({
-                    commentedUserData: [...prevState.commentedUserData, querySnapshot.data()],
-                  }))
+                  if (this._isMounted) {
+                    this.setState((prevState: PreviewModalState) => ({
+                      commentedUserData: [...prevState.commentedUserData, querySnapshot.data()],
+                    }))
+                  }
                 })
               }
             counter++;
@@ -106,6 +105,15 @@ class PreviewModal extends Component<PreviewModalProps, PreviewModalState> {
           })
         })
     }
+  }
+
+  componentDidMount = () => {
+    this.updateFirebaseData();
+  }
+
+  componentDidUpdate = (prevProps: PreviewModalProps, prevState: PreviewModalState) => {
+    if (prevProps === this.props) return;
+    this.updateFirebaseData();
   }
 
   componentWillUnmount = () => {

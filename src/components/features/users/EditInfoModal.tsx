@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import firebase from '../../../config/firebaseService';
+import { toastr } from 'react-redux-toastr';
 import { UserData } from '../../../models/users/UserData';
 import { COLLECTION } from '../../../constants/firebase-collections.constants';
 
@@ -48,7 +49,7 @@ class EditInfoModal extends Component<EditInfoModalProps, EditInfoModalState> {
       "state_changed",
       () => { },
       (error: any) => {
-        console.log(error);
+        toastr.error('Error', error);
       },
       () => {
         firebase

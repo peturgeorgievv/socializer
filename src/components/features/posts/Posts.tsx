@@ -86,11 +86,11 @@ class Posts extends Component<PostsProps, PropsState> {
   render = () => {
     return (
       <React.Fragment>
-          <PreviewModal 
+          {this.state.show && <PreviewModal 
             show={this.state.show}
             handleClose={this.hideModal}
             imgData={this.state.imgData}
-          />
+          />}
           <div className="posts-container">
             { this.state.posts && 
               this.state.posts.length > 0 &&

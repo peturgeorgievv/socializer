@@ -24,9 +24,7 @@ class Home extends Component<HomeProps, HomeState> {
   constructor(props: any) {
     super(props);
     this._isMounted = true;
-    this.ref = firebase
-      .firestore()
-      .collection(COLLECTION.posts);
+    this.ref = null;
     this.unsubscribe = null;
     this.state = {
       show: false,
@@ -35,7 +33,10 @@ class Home extends Component<HomeProps, HomeState> {
     }
   }
 
-  componentDidMount = () => {
+  componentDidMount = (): void => {
+    this.ref = firebase
+      .firestore()
+      .collection(COLLECTION.posts);
     this.ref = this.ref.onSnapshot(this.onCollectionUpdate);
     this.unsubscribe = this.ref;
   }
@@ -50,20 +51,22 @@ class Home extends Component<HomeProps, HomeState> {
     }
   }
 
-  componentWillUnmount = () => {
+  componentWillUnmount = (): void => {
     this._isMounted = false;
     this.ref = null;
     this.unsubscribe = null;
   }
   
-  showModal = (imgData: ImgData) => {
+  showModal = (imgData: ImgData): void => {
+    if (!this._isMounted) return;
     this.setState({ 
       show: true,
       imgData,
      });
   };
 
-  hideModal = () => {
+  hideModal = (): void => {
+    if (!this._isMounted) return;
     this.setState({ show: false });
   };
   
@@ -110,11 +113,11 @@ class Home extends Component<HomeProps, HomeState> {
   render = () => {
     return (
       <div className="posts-container">
-        <PreviewModal 
+        {this.state.show && <PreviewModal 
           show={this.state.show}
           handleClose={this.hideModal}
           imgData={this.state.imgData}
-        />
+        />}
         { this.state.posts.length > 0 && this.state.posts.map((data: any, index: any) => {
           return (
             <div className="posts-container-img" key={index} onClick={() => this.showModal(data)}>

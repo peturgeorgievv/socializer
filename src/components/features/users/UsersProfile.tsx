@@ -32,7 +32,6 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
   docRefCurrentUser: any;
   userRef: any;
 
-
   constructor(props: UsersProfileProps) {
     super(props);
     this._isMounted = true;
@@ -60,10 +59,6 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
     this.refUserData = this.refUserData.onSnapshot(this.onCollectionUpdate)
   }
 
-  componentDidUpdate = () => {
-    if (!this._isMounted) return;
-  }
-
   showModal = (imgData: any): void => {
     if (!this._isMounted) return;
     this.setState({
@@ -72,7 +67,7 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
     });
   };
 
-  showFollowersModal = (userData: any) => {
+  showFollowersModal = (userData: any): void => {
     if (!this._isMounted) return;
     this.setState({
       showFollowers: true,
@@ -80,7 +75,7 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
     })
   }
 
-  showFollowingModal = (userData: any) => {
+  showFollowingModal = (userData: any): void => {
     if (!this._isMounted) return;
     this.setState({
       showFollowing: true,
@@ -88,7 +83,7 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
     })
   }
 
-  showEditInfoModal = (userData: any) => {
+  showEditInfoModal = (userData: any): void => {
     if (!this._isMounted) return;
     this.setState({
       showEditInfo: true,
@@ -96,22 +91,22 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
     })
   }
 
-  hideModal = () => {
+  hideModal = (): void => {
     if (!this._isMounted) return;
     this.setState({ show: false });
   };
 
-  hideFollowersModal = () => {
+  hideFollowersModal = (): void => {
     if (!this._isMounted) return;
     this.setState({ showFollowers: false });
   }
 
-  hideFollowingModal = () => {
+  hideFollowingModal = (): void => {
     if (!this._isMounted) return;
     this.setState({ showFollowing: false });
   }
 
-  hideEditInfoModal = () => {
+  hideEditInfoModal = (): void => {
     if (!this._isMounted) return;
     this.setState({ showEditInfo: false })
   }
@@ -259,11 +254,11 @@ class UsersProfile extends Component<UsersProfileProps, UsersProfileState> {
       <div>
         {this.state.userData && this.state.posts && (
           <React.Fragment>
-            <PreviewModal
+            {this.state.show && <PreviewModal
               show={this.state.show}
               handleClose={this.hideModal}
               imgData={this.state.imgData}
-            />
+            />}
             <FollowersModal
               show={this.state.showFollowers}
               handleClose={this.hideFollowersModal}
