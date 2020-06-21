@@ -60,9 +60,9 @@ class EditInfoModal extends Component<EditInfoModalProps, EditInfoModalState> {
           .then((url: any) => {
             firebase.firestore().collection(COLLECTION.users).doc(this.props.userData.documentId).set({
               profilePhotoUrl: url,
-              firstName: this.state.firstName,
-              lastName: this.state.lastName,
-              description: this.state.description,
+              firstName: this.state.firstName ? this.state.firstName : '',
+              lastName: this.state.lastName ? this.state.lastName : '',
+              description: this.state.description ? this.state.description : '',
             }, { merge: true });
             this.setState({ url });
           });
@@ -77,9 +77,9 @@ class EditInfoModal extends Component<EditInfoModalProps, EditInfoModalState> {
       this.handleUpload();
     } else {
       firebase.firestore().collection(COLLECTION.users).doc(this.props.userData.documentId).set({
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
-        description: this.state.description,
+        firstName: this.state.firstName ? this.state.firstName : '',
+        lastName: this.state.lastName ? this.state.lastName : '',
+        description: this.state.description ? this.state.description : '',
       }, { merge: true });
     }
   }
