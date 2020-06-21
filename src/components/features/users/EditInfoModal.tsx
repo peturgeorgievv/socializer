@@ -58,7 +58,6 @@ class EditInfoModal extends Component<EditInfoModalProps, EditInfoModalState> {
           .child(image.name)
           .getDownloadURL()
           .then((url: any) => {
-            console.log(url);
             firebase.firestore().collection(COLLECTION.users).doc(this.props.userData.documentId).set({
               profilePhotoUrl: url,
               firstName: this.state.firstName,

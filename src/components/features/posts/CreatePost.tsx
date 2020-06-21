@@ -67,7 +67,7 @@ class CreatePost extends Component<CreatePostProps, CreatePostState> {
       "state_changed",
       () => { },
       (error: any) => {
-        console.log(error);
+        toastr.error('Oops, something went wrong', '');
       },
       () => {
         firebase
