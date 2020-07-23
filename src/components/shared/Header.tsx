@@ -9,7 +9,7 @@ import { COLLECTION } from '../../constants/firebase-collections.constants';
 
 type HeaderProps = {
   currentUser: any;
-  logout: any;
+  logout: Function;
   history: any;
 }
 
@@ -49,7 +49,7 @@ class Header extends Component<HeaderProps, HeaderState> {
     this.refUsers = null;
   }
 
-  searchUser = (event: any) => {
+  searchUser = (event: any): void => {
     this.setState({
       name: event.target.value,
     });
@@ -68,7 +68,7 @@ class Header extends Component<HeaderProps, HeaderState> {
     })
   }
 
-  handleSubmit = (event: any) => {
+  handleSubmit = (event: any): void => {
     event.preventDefault();
     this.props.history.push(`/users/${this.state.users[0].documentId}`)
     this.setState({
@@ -79,11 +79,11 @@ class Header extends Component<HeaderProps, HeaderState> {
     });
   }
 
-  onFocus = () => {
+  onFocus = (): void => {
     this.setState({ focused: true });
   }
 
-  onBlur = () => {
+  onBlur = (): void => {
     setTimeout(() => {
       this.setState({
         name: '',
@@ -92,13 +92,13 @@ class Header extends Component<HeaderProps, HeaderState> {
     }, 300);
   }
 
-  openSearch = () => {
+  openSearch = (): void => {
     this.setState({ 
       searchOpen: !this.state.searchOpen,
     });
   }
 
-  showAndHideDropdownMenu = (event: any) => {
+  showAndHideDropdownMenu = (event: any): void => {
     event.preventDefault();
     this.setState({ showDropdownMenu: !this.state.showDropdownMenu });
   }

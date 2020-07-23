@@ -5,7 +5,7 @@ import { toastr } from 'react-redux-toastr';
 
 type SignInProps = {
   history: any;
-  login: any;
+  login: Function;
 }
 
 type SignInState = {

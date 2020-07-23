@@ -17,7 +17,7 @@ export const registerSuccess = (): any => {
   }
 }
 
-export const register = (email: string, password: string) => async (dispatch: (arg0: { type: string; currentUser: any; }) => any) => {
+export const register = (email: string, password: string) => async (dispatch: any) => {
   try {
     await auth.createUserWithEmailAndPassword(email, password)
     return dispatch(registerSuccess())
@@ -26,7 +26,7 @@ export const register = (email: string, password: string) => async (dispatch: (a
   }
 }
 
-export const login = (email: any, password: any) => async (dispatch: (arg0: { type: string; currentUser: any; }) => void) => {
+export const login = (email: any, password: any) => async (dispatch: any) => {
   try {
     await auth.signInWithEmailAndPassword(email, password)
     dispatch(loginSuccess())

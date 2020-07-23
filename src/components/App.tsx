@@ -12,7 +12,11 @@ import { fetchUser } from "../store/actions/firebaseAuth";
 import { getUserPosts } from "../store/actions/firebaseImages";
 import ProtectedRoute from "./shared/ProtectedRoute";
 
-type AppProps = any;
+type AppProps = {
+  fetchUser: Function;
+  getUserPosts: Function;
+  currentUser: any;
+};
 type AppState = {};
 
   // FIX BUG WITH COMMENTING --------------

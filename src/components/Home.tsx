@@ -21,7 +21,7 @@ class Home extends Component<HomeProps, HomeState> {
   ref: any;
   unsubscribe: any;
 
-  constructor(props: any) {
+  constructor(props: HomeProps) {
     super(props);
     this._isMounted = true;
     this.ref = null;
@@ -118,7 +118,7 @@ class Home extends Component<HomeProps, HomeState> {
           handleClose={this.hideModal}
           imgData={this.state.imgData}
         />}
-        { this.state.posts.length > 0 && this.state.posts.map((data: any, index: any) => {
+        { this.state.posts.length > 0 && this.state.posts.map((data: any, index: number) => {
           return (
             <div className="posts-container-img" key={index} onClick={() => this.showModal(data)}>
               <img src={data.imgUrl} alt="img" />
