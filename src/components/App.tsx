@@ -19,7 +19,6 @@ type AppProps = {
 };
 type AppState = {};
 
-  // FIX BUG WITH COMMENTING --------------
 class App extends Component<AppProps, AppState> {
   refUser: any;
   refPhotos: any;
